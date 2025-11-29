@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>ParadiseFinder 2025 – Ultimate Expat Tool (three-globe)</title>
     
-    <link rel="manifest" href="data:application/json;charset=utf-8;base64,eyJpY29ucyI6IFt7InNyYyI6ICJodHRwczovL2Vtb2ppaXZlLW9iamVjdHMuczMtZWFzdC0yLWFtYXpvbmF3cy5jb20vMDBkMGQyMmMtNmExNy00ZWMwLWI4ZGQtNmQ0OTc1Yjk0OTNmLzAxMWQxNmFhLTJmM2EtNGM1MS1iMDA1LTQ2OWRmNTE3OWI5ZC5qcGciLCJzaXplcyI6ICIxOTJ4MTkyIn0sIHsic3JjIjogImh0dHBzOi8vZW1vaml2ZS1vYmplY3RzLnMzLWVhc3QtMi1hbWF6b25hd3MuY29tLzAwZDBkMjJjLTZhMTctNGVjMC1iOGRkLTZkNDk3NWI5NDkzZi8wMTFkMTZhYS0yZjNhLTRjNTEtYjAwNS00NjlkZjUxNzlhOWQuanBnIiwic2l6ZXMiOiAiNTEyeDUxMiJ9XSwgIm5hbWUiOiAiUGFyYWRpc2VGaW5kZXIiLCAic2hvcnRfbmFtZSI6ICJQYXJhaGlzZUZpbmRlciIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiIH0=">
+    <link rel="manifest" href="data:application/json;charset=utf-8;base64,eyJpY29ucyI6IFt7InNyYyI6ICJodHRwczovL2Vtb2ppaXZlLW9iamVjdHMuczMtZWFzdC0yLWFtYXpvbmF3cy5jb20vMDBkMGQyMmMtNmExNy00ZWMwLWI4ZGQtNmQ0OTc1Yjk0OTNmLzAxMWQxNmFhLTJmM2EtNGM1MS1iMDA1LTQ2OWRmNTE3OWI5ZC5qcGciLCJzaXplcyI6ICIxOTJ4MTkyIn0sIHsic3JjIjogImh0dHBzOi8vZW1vaml2ZS1vYmplY3RzLnMzLWVhc3QtMi1hbWFhem9uYXdzLmNvbS8wMGQwZDIyYy02YTE3LTRlYzAtYjhkZC02ZDQ5NzViOTQ5M2YvMDExZDE2YWEtMmYzYS00YzUxLWIwMDUtNDY5ZGY1MTc5YjlkLmpwZyIsInNpemVzIjoiNTEyeDUxMiJ9XSwgIm5hbWUiOiAiUGFyYWRpc2VGaW5kZXIiLCAic2hvcnRfbmFtZSI6ICJQYXJhZGlzZUZpbmRlciIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiIH0=">
 
     <script src="https://unpkg.com/globe.gl@4.36.7/dist/globe.gl.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
@@ -164,12 +164,20 @@
         ];
         
         const HIGH_VALUE_DESTINATIONS = [
-            // Datenstruktur wie zuvor (gekürzt)
             {"name":"Dubai (UAE)","lat":25.2048,"lng":55.2708,"flag":"🇦🇪","tax":0,"living":78000,"residency":"Golden Visa ab 500k€","scores":[1,1,1,0.95,1,1,1,1,1,1,0.7,0.6,0.95,0.7,0.8,0.9,1,0.9,0.9,1,1,1,0.9,1,1,0.9,1,1]},
             {"name":"Madeira (Portugal)","lat":32.7607,"lng":-16.9595,"flag":"🇵🇹","tax":10,"living":42000,"residency":"NHR 2.0 bis mind. 2034","scores":[1,0.9,0.95,0.95,0.95,0.85,0.9,0.9,1,1,0.9,0.9,0.9,0.95,1,1,1,0.95,1,1,0.9,1,1,1,1,0.95,1,1]},
             {"name":"Malta & Gozo","lat":35.9375,"lng":14.3754,"flag":"🇲🇹","tax":15,"living":54000,"residency":"Permanent Residency €150k","scores":[1,1,0.95,0.9,0.95,1,0.85,0.85,1,1,0.8,0.75,0.9,1,0.95,0.95,1,1,1,1,0.95,1,1,1,1,0.95,1,1]},
             {"name":"Zypern (Limassol)","lat":34.7071,"lng":33.0226,"flag":"🇨🇾","tax":12.5,"living":52000,"residency":"Permanent Residency €300k","scores":[1,0.9,0.95,0.95,0.95,1,0.85,0.85,1,0.95,0.8,0.8,0.9,1,0.95,0.95,1,1,1,1,0.95,1,1,1,1,0.95,1,1]},
+            {"name":"Mauritius","lat":-20.3484,"lng":57.5522,"flag":"🇲🇺","tax":15,"living":48000,"residency":"Premium Visa (Long-Stay)","scores":[1,0.9,0.95,0.9,0.9,0.9,1,1,1,1,0.85,0.75,0.8,0.5,0.8,0.4,0.7,0.9,1,1,1,0.8,0.9,1,1,0.9,0.95,1]},
+            {"name":"Cayman Islands","lat":19.3133,"lng":-81.2546,"flag":"🇰🇾","tax":0,"living":110000,"residency":"Residency by Investment","scores":[1,1,1,0.95,1,1,1,1,1,1,0.5,0.3,0.9,0.4,0.9,0.7,0.8,0.9,0.9,1,1,1,0.8,0.9,1,0.8,0.7,1]},
             {"name":"Georgien (Tbilisi)","lat":41.7151,"lng":44.8271,"flag":"🇬🇪","tax":1,"living":30000,"residency":"1% Small Business Status","scores":[0.95,0.8,0.85,0.9,0.85,0.7,0.98,0.98,1,1,0.95,0.95,0.9,0.9,0.8,0.9,0.6,0.85,0.95,0.9,0.9,0.9,1,1,0.8,0.9,1,0.95]},
+            {"name":"Panama","lat":8.9824,"lng":-79.5199,"flag":"🇵🇦","tax":0,"living":48000,"residency":"Friendly Nations Visa","scores":[0.95,0.85,0.9,0.9,0.9,0.8,1,1,1,1,0.85,0.8,0.8,0.8,0.7,0.5,0.6,0.85,1,1,1,0.7,0.9,1,0.9,0.85,0.95,1]},
+            {"name":"Bali","lat":-8.6525,"lng":115.1453,"flag":"🇮🇩","tax":30,"living":36000,"residency":"B211A + KITAS","scores":[0.9,0.3,0.85,0.95,0.85,1,0.7,0.7,0.9,1,0.9,1,0.7,0.2,0.8,0.1,0.7,1,0.9,0.9,0.8,0.6,0.8,0.7,0.7,0.9,0.9,0.9]},
+            {"name":"Phuket","lat":7.9519,"lng":98.3382,"flag":"🇹🇭","tax":35,"living":42000,"residency":"LTR Visa 10 Jahre","scores":[0.9,0.2,0.8,0.95,0.85,1,0.6,0.6,0.9,1,0.9,1,0.8,0.3,0.8,0.3,0.6,1,0.9,0.9,0.7,0.5,0.7,0.7,0.7,0.9,0.9,0.9]},
+            {"name":"Teneriffa","lat":28.2916,"lng":-16.6291,"flag":"🇪🇸","tax":24,"living":45000,"residency":"Non-Lucrative Visa","scores":[1,0.7,0.95,1,0.95,0.9,0.7,0.7,0.8,0.8,0.9,0.9,0.9,0.95,1,1,1,1,1,1,0.9,1,1,1,1,0.95,1,1]},
+            {"name":"Mallorca","lat":39.6953,"lng":2.9787,"flag":"🇪🇸","tax":24,"living":55000,"residency":"Non-Lucrative Visa","scores":[1,0.65,0.95,1,0.95,0.9,0.65,0.65,0.7,0.7,0.85,0.85,0.9,1,1,1,1,1,1,1,0.9,1,1,1,1,0.95,1,1]},
+            {"name":"Monaco","lat":43.7334,"lng":7.4190,"flag":"🇲🇨","tax":0,"living":150000,"residency":"Ordinary Residency","scores":[0.95,0.7,1,1,1,0.7,1,1,1,1,0.5,0.05,0.99,0.95,0.8,1,0.7,0.9,1,1,1,0.9,0.9,0.95,1,1,0.9,1]},
+            {"name":"Andorra","lat":42.5063,"lng":1.5218,"flag":"🇦🇩","tax":10,"living":55000,"residency":"Active Residency","scores":[0.9,0.7,1,0.9,0.95,0.6,0.9,0.95,1,1,0.8,0.7,0.9,0.95,0.7,1,0.7,0.9,1,1,1,0.9,0.9,0.9,1,1,1,1]}
         ];
         
         let destinations = [];
@@ -196,7 +204,7 @@
                     residency: 'Lokales Programm (Simuliert)',
                     scores: Array(QUESTIONS.length).fill(0).map(() => Math.max(0.2, (Math.random() * 0.3) + 0.3)), 
                     real: false, calc: {}, id: 'PR_' + destinations.length,
-                    altitude: Math.random() * 0.05 + 0.01 // Minimal über dem Globus
+                    altitude: Math.random() * 0.05 + 0.01 
                 });
             }
             document.getElementById('progress-fill').style.width = '50%';
@@ -210,32 +218,32 @@
         function initGlobe() {
             Globe = window.Globe()
                 (document.getElementById('globe-container'))
-                .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg') // Realistische Nacht-Textur
+                .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg') 
                 .backgroundColor('#050510')
                 .showAtmosphere(true)
                 .atmosphereColor('#00f3ff')
                 .atmosphereAltitude(0.25)
                 .pointColor(d => {
-                    // Farbe basierend auf Score setzen (wird später in calculate() überschrieben)
+                    // Stabile Initialisierung: Fallback, falls calc.score noch nicht existiert
                     const score = d.calc && d.calc.score ? d.calc.score : 50;
                     const h = (score / 100) * 0.33; 
                     return `hsl(${h * 360}, 100%, 60%)`;
                 })
-                .pointAltitude('altitude') // Nutze das vorberechnete Altitude-Feld
-                .pointRadius(d => 0.2 + (d.calc && d.calc.score ? d.calc.score / 100 : 0.5) * 0.2) // Radius skalieren
+                .pointAltitude('altitude') 
+                .pointRadius(d => 0.2 + (d.calc && d.calc.score ? d.calc.score / 100 : 0.5) * 0.2) 
                 .pointsData(destinations)
-                .pointLabel(d => `${d.flag} ${d.name} (${Math.round(d.calc.score)}%)`) // Standard-Tooltip
-                .onPointClick(selectLocation) // Interaktion: Klick auf Punkt wählt aus
+                .pointLabel(d => `${d.flag} ${d.name} (${Math.round(d.calc.score)}%)`) 
+                .onPointClick(selectLocation) 
                 .controlsState({ 
                     autoRotate: true, 
                     autoRotateSpeed: 0.8 
                 });
             
-            // --- HTML Elements Layer (WIE GEWÜNSCHT) ---
+            // --- HTML Elements Layer ---
             Globe.htmlElementsData(destinations)
                  .htmlLat('lat')
                  .htmlLng('lng')
-                 .htmlAltitude(d => d.altitude + 0.01) // Etwas höher als der Punkt
+                 .htmlAltitude(d => d.altitude + 0.01) 
                  .htmlElement(d => {
                     const el = document.createElement('div');
                     el.className = 'globe-billboard';
@@ -243,13 +251,16 @@
                     el.innerHTML = `${d.flag} ${d.name} <span class="billboard-score">0%</span>`;
                     return el;
                  })
-                 .htmlTransitionDuration(500); // Sanfter Übergang beim Neupositionieren
+                 .htmlTransitionDuration(500); 
             
             // Initiales Rendering und Anpassung
             window.addEventListener('resize', () => Globe.width(window.innerWidth).height(window.innerHeight));
             Globe.width(window.innerWidth).height(window.innerHeight);
 
             document.getElementById('progress-fill').style.width = '75%';
+            
+            // KORREKTUR: Führe calculate() sofort aus, um die d.calc-Daten zu initialisieren
+            calculate(); 
         }
 
 
@@ -261,8 +272,10 @@
             const sliderCont = document.getElementById('sliders-container');
             QUESTIONS.forEach((q, i) => {
                 const div = document.createElement('div');
+                const labelText = `${i+1}. ${q}`;
+                const safeId = `slider-${i}`;
                 div.className = 'control-group';
-                div.innerHTML = `<label>${i+1}. ${q}</label><input type="range" min="0" max="100" value="50" oninput="updateWeight(${i}, this.value)">`;
+                div.innerHTML = `<label for="${safeId}">${labelText}</label><input type="range" id="${safeId}" min="0" max="100" value="50" oninput="updateWeight(${i}, this.value)">`;
                 sliderCont.appendChild(div);
             });
 
@@ -313,7 +326,7 @@
                 }
             });
 
-            // Wichtig: Daten-Update an Globe senden
+            // Daten-Update an Globe senden, um Farben/Größen zu aktualisieren
             if (Globe) {
                 Globe.pointsData(destinations);
             }
@@ -359,7 +372,9 @@
             selectedData = data;
             
             // Kamera Fly (Nutzung der Globe.GL-Methode)
-            Globe.pointOfView({ lat: data.lat, lng: data.lng, altitude: 1.5 }, 1500); 
+            if(Globe) {
+                Globe.pointOfView({ lat: data.lat, lng: data.lng, altitude: 1.5 }, 1500); 
+            }
             
             // UI-Populate (Unverändert)
             document.getElementById('country-name').innerText = `${data.flag} ${data.name}`;
@@ -438,19 +453,23 @@
             setupUIAndListeners();
             initGlobe(); // Initialisiert den Globe und die HTML-Layer
             
-            calculate(); 
-
             // Ladeanimation ausblenden
             document.getElementById('progress-fill').style.width = '100%';
             document.getElementById('loader').style.opacity = 0;
             setTimeout(() => document.getElementById('loader').remove(), 1000);
             
-            // Startet mit dem ersten Top-Ranking-Platz
+            // KORREKTUR: Verzögerung des ersten Fly-to-Effekts, um dem Globe Zeit zum Initialisieren zu geben
             setTimeout(() => {
                 if (destinations.length > 0) {
-                    selectLocation(destinations.sort((a, b) => b.calc.score - a.calc.score)[0]);
+                    const topDestination = destinations.sort((a, b) => b.calc.score - a.calc.score)[0];
+                    
+                    // Führt den "Fly" aus
+                    Globe.pointOfView({ lat: topDestination.lat, lng: topDestination.lng, altitude: 1.5 }, 1500);
+                    
+                    // Wählt den Standort im UI aus
+                    selectLocation(topDestination);
                 }
-            }, 1500);
+            }, 2500); // 2.5 Sekunden Wartezeit
         }
 
         window.onload = initApp;
