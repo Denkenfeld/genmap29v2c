@@ -2,90 +2,67 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title>ParadiseFinder 2025 – Ultimate Expat Tool (three-globe)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParadiseFinder 2025 – Daten-Fokus & Ranking</title>
     
-    <link rel="manifest" href="data:application/json;charset=utf-8;base64,eyJpY29ucyI6IFt7InNyYyI6ICJodHRwczovL2Vtb2ppaXZlLW9iamVjdHMuczMtZWFzdC0yLWFtYXpvbmF3cy5jb20vMDBkMGQyMmMtNmExNy00ZWMwLWI4ZGQtNmQ0OTc1Yjk0OTNmLzAxMWQxNmFhLTJmM2EtNGM1MS1iMDA1LTQ2OWRmNTE3OWI5ZC5qcGciLCJzaXplcyI6ICIxOTJ4MTkyIn0sIHsic3JjIjogImh0dHBzOi8vZW1vaml2ZS1vYmplY3RzLnMzLWVhc3QtMi1hbWFhem9uYXdzLmNvbS8wMGQwZDIyYy02YTE3LTRlYzAtYjhkZC02ZDQ5NzViOTQ5M2YvMDExZDE2YWEtMmYzYS00YzUxLWIwMDUtNDY5ZGY1MTc5YjlkLmpwZyIsInNpemVzIjoiNTEyeDUxMiJ9XSwgIm5hbWUiOiAiUGFyYWRpc2VGaW5kZXIiLCAic2hvcnRfbmFtZSI6ICJQYXJhZGlzZUZpbmRlciIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiIH0=">
-
-    <script src="https://unpkg.com/globe.gl@4.36.7/dist/globe.gl.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
-            --neon-blue: #00f3ff;
+            --neon-blue: #00c6ff;
             --neon-green: #0aff68;
-            --bg-dark: #050510;
-            --bg-glass: rgba(10, 15, 30, 0.85); 
-            --border-glass: 1px solid rgba(0, 243, 255, 0.2);
+            --bg-dark: #121220;
+            --bg-glass: rgba(20, 30, 50, 0.95); 
+            --border-glass: 1px solid rgba(0, 198, 255, 0.2);
             --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
-        /* Reset and Base */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; overflow: hidden; background-color: var(--bg-dark); font-family: var(--font-main); color: #fff; }
+        /* Base Setup */
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; background-color: var(--bg-dark); font-family: var(--font-main); color: #fff; padding: 20px; display: flex; gap: 30px; }
         
-        /* Three.js Container */
-        #globe-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        /* Left Panel (Controls) */
+        #panel-left { position: sticky; top: 20px; width: 400px; background: var(--bg-glass); border: var(--border-glass); border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); max-height: 96vh; overflow-y: auto; flex-shrink: 0; }
+        
+        /* Right Panel (Ranking & Details) */
+        #ranking-panel { flex-grow: 1; display: flex; gap: 30px; }
+        #ranking-list-container { width: 450px; background: var(--bg-glass); border: var(--border-glass); border-radius: 16px; padding: 24px; max-height: 96vh; overflow-y: auto; }
+        #panel-right { flex-grow: 1; background: var(--bg-glass); border: var(--border-glass); border-radius: 16px; padding: 24px; max-height: 96vh; overflow-y: auto; }
 
-        /* General Panel Styling (Z-Index erhöht, da Globe jetzt Z-Index 1 ist) */
-        .panel { position: absolute; pointer-events: auto; background: var(--bg-glass); backdrop-filter: blur(25px); border: var(--border-glass); border-radius: 16px; padding: 24px; z-index: 10; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8); transition: all 0.4s ease; max-height: 95vh; scrollbar-width: thin; scrollbar-color: rgba(0, 243, 255, 0.4) rgba(0, 0, 0, 0.2); }
-        #panel-left { top: 20px; left: 20px; width: 380px; bottom: 20px; overflow-y: scroll; }
-        #panel-right { top: 20px; right: 20px; width: 420px; bottom: 20px; overflow-y: scroll; transform: translateX(120%); }
-        #panel-right.active { transform: translateX(0); }
+        /* General UI */
         h2 { margin: 0 0 15px 0; font-weight: 400; font-size: 18px; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
         h3 { font-size: 13px; color: #fff; margin-top: 15px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Form, Ranking, Results (Unverändert) */
+        /* Input Controls */
         label { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; color: #aaa; }
         input[type=range] { width: 100%; -webkit-appearance: none; background: rgba(0,0,0,0.5); height: 3px; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: var(--neon-blue); border-radius: 50%; cursor: grab; box-shadow: 0 0 10px var(--neon-blue); }
         input[type=number] { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid #444; color: #fff; padding: 6px; border-radius: 4px; font-size: 14px; }
         .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
-        .ranking-item { display: flex; justify-content: space-between; padding: 8px 10px; margin-bottom: 4px; border-radius: 6px; cursor: pointer; transition: background 0.2s; font-size: 14px; background: rgba(0,0,0,0.3); }
-        .ranking-item:hover { background: rgba(0, 243, 255, 0.1); }
+
+        /* Ranking List */
+        .ranking-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; margin-bottom: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s; font-size: 14px; background: rgba(0,0,0,0.3); border-left: 5px solid transparent; }
+        .ranking-item:hover, .ranking-item.selected { background: rgba(0, 198, 255, 0.1); border-left-color: var(--neon-blue); }
         .score-indicator { width: 5px; height: 100%; margin-right: 10px; border-radius: 2px; }
-        .big-stat-box { background: rgba(0,243,255,0.05); border: 1px solid rgba(0,243,255,0.2); border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 20px; }
-        .stat-circle-score { font-size: 56px; font-weight: 300; display: block; text-shadow: 0 0 30px rgba(0,243,255,0.5); }
+        .rank-number { color: #666; width: 25px; font-size: 12px; font-weight: bold; }
+
+        /* Detail View */
+        .big-stat-box { background: rgba(0,198,255,0.05); border: 1px solid rgba(0,198,255,0.2); border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .stat-circle-score { font-size: 56px; font-weight: 300; display: block; text-shadow: 0 0 30px rgba(0,198,255,0.5); }
         .f-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 15px; }
         .cash-flow { font-size: 20px; font-weight: bold; margin-top: 10px; }
         .btn-main { width: 100%; padding: 14px; margin-top: 20px; background: linear-gradient(90deg, #00c6ff, #0072ff); border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; }
 
-        /* Loading (Unverändert) */
-        #loader { position: absolute; top:0; left:0; width:100%; height:100%; background:var(--bg-dark); z-index:999; display:flex; justify-content:center; align-items:center; flex-direction: column; transition: opacity 1s; }
-        .progress-bar { width: 300px; height: 3px; background: rgba(255,255,255,0.1); margin-top: 15px; border-radius: 2px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; background: var(--neon-blue); width: 0%; transition: width 0.3s; }
-        .spinner { width: 50px; height: 50px; border: 3px solid rgba(0,243,255,0.3); border-top-color: var(--neon-blue); border-radius: 50%; animation: spin 1s infinite linear; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* three-globe Billboards (mit CSS2D Renderer) */
-        .globe-billboard {
-            pointer-events: all;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid var(--neon-blue);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #fff;
-            cursor: pointer;
-            white-space: nowrap;
-            box-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
-            transition: background 0.2s;
-        }
-        .globe-billboard:hover { background: rgba(0, 243, 255, 0.15); }
-        .billboard-score { font-weight: bold; margin-left: 5px; }
+        /* Criteria Detail Grid */
+        #criteria-details { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .criteria-item { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 6px; }
+        .criteria-item strong { display: block; font-size: 12px; color: var(--neon-blue); margin-bottom: 4px; }
+        .criteria-item .score-val { font-size: 16px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div id="loader">
-        <div class="spinner"></div>
-        <div style="margin-top:20px; font-size:14px; letter-spacing:2px; color:var(--neon-blue);" id="loader-text">Scanne 258 Paradiese und kalibriere Geo-Daten...</div>
-        <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
-    </div>
     
-    <div id="globe-container"></div>
-
-    <div id="panel-left" class="panel">
+    <div id="panel-left">
         <h2>System-Präferenzen</h2>
         
         <div class="input-group">
@@ -94,43 +71,48 @@
             <div style="flex:1;"><label>Kinder</label><input type="number" id="children" value="2" min="0" max="10"></div>
         </div>
 
-        <h3>Ranking Top 10 (Score: 75% Kriterien + 25% Finanzen)</h3>
-        <div id="ranking-list"></div>
-
         <h3>Gewichtung der 28 Kriterien (0 - 100 %)</h3>
         <div id="sliders-container"></div>
     </div>
 
-    <div id="panel-right" class="panel">
-        <button style="position:absolute; top:15px; right:15px; background:none; border:none; color:var(--neon-blue); font-size:24px; cursor:pointer;" onclick="closeRightPanel()">✕</button>
-        <h2 id="country-name">Zielort wählen</h2>
-
-        <div class="big-stat-box">
-            <span class="stat-circle-score" id="match-score" style="color:var(--neon-blue);">0%</span>
-            <span style="font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#aaa;">Globaler Match Score</span>
+    <div id="ranking-panel">
+        <div id="ranking-list-container">
+            <h2>🌍 Globales Ranking (258 Standorte)</h2>
+            <div id="ranking-list"></div>
         </div>
 
-        <h3>Finanzanalyse</h3>
-        <div class="finance-grid">
-            <div class="f-row"><span>Effektiver Steuersatz</span><span id="tax-rate" style="font-weight:bold;">0%</span></div>
-            <div class="f-row"><span>Netto nach Steuern / Jahr</span><span id="net-income"></span></div>
-            <div class="f-row"><span>Lebenshaltung (Fam. Schätzung) / Jahr</span><span id="living-cost"></span></div>
-            <div class="f-row cash-flow">
-                <span>Übrig pro Monat</span>
-                <span id="cashflow-monthly"></span>
+        <div id="panel-right">
+            <h2 id="country-name">Bitte wählen Sie einen Standort aus der Liste</h2>
+
+            <div class="big-stat-box">
+                <span class="stat-circle-score" id="match-score">0%</span>
+                <span style="font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#aaa;">Globaler Match Score</span>
             </div>
-        </div>
-        
-        <div style="margin: 20px 0; padding:15px; border-left: 4px solid var(--neon-green); background: rgba(10,255,104,0.1);">
-            <div style="font-size:11px; text-transform:uppercase; color:var(--neon-green); font-weight:bold;">Vermögens-Turbo (vs. DE 42% Steuer)</div>
-            <div style="font-size:20px; font-weight:bold; margin-top:5px;" id="wealth-gain"></div>
-            <div style="font-size:12px; color:#aaa;">Mehrvermögen nach 10 Jahren (optimiert)</div>
-        </div>
 
-        <h3>Hard Facts & Programme</h3>
-        <div id="details-container" style="font-size:14px; line-height:1.6; color:#ccc;"></div>
+            <h3>Finanzanalyse (Basis: 120.000 € Brutto)</h3>
+            <div class="finance-grid">
+                <div class="f-row"><span>Effektiver Steuersatz</span><span id="tax-rate" style="font-weight:bold;">0%</span></div>
+                <div class="f-row"><span>Netto nach Steuern / Jahr</span><span id="net-income"></span></div>
+                <div class="f-row"><span>Lebenshaltung (Fam. Schätzung) / Jahr</span><span id="living-cost"></span></div>
+                <div class="f-row cash-flow">
+                    <span>Übrig pro Monat (Cashflow)</span>
+                    <span id="cashflow-monthly"></span>
+                </div>
+            </div>
+            
+            <div style="margin: 20px 0; padding:15px; border-left: 4px solid var(--neon-green); background: rgba(10,255,104,0.1);">
+                <div style="font-size:11px; text-transform:uppercase; color:var(--neon-green); font-weight:bold;">Vermögens-Turbo (vs. DE 42% Steuer)</div>
+                <div style="font-size:20px; font-weight:bold; margin-top:5px;" id="wealth-gain"></div>
+                <div style="font-size:12px; color:#aaa;">Mehrvermögen nach 10 Jahren (simuliert)</div>
+            </div>
 
-        <button class="btn-main" onclick="generatePDF()">📄 PDF Report (Offiziell) Generieren</button>
+            <h3>Hard Facts & Kriterien-Erfüllung</h3>
+            <div id="details-container" style="font-size:14px; line-height:1.6; color:#ccc;"></div>
+            
+            <div id="criteria-details"></div>
+
+            <button class="btn-main" onclick="generatePDF()">📄 PDF Report Generieren</button>
+        </div>
     </div>
 
     <div id="pdf-content" style="position:fixed; top:-9999px; left:0; width:800px; background:#fff; color:#111; padding:50px; font-family:'Helvetica', sans-serif;">
@@ -163,133 +145,68 @@
             "Exit jederzeit möglich (Kapital rausbringbar)", "Top Kinder-Infrastruktur (Spielplätze, Freizeit, Schulen)"
         ];
         
-        const HIGH_VALUE_DESTINATIONS = [
-            {"name":"Dubai (UAE)","lat":25.2048,"lng":55.2708,"flag":"🇦🇪","tax":0,"living":78000,"residency":"Golden Visa ab 500k€","scores":[1,1,1,0.95,1,1,1,1,1,1,0.7,0.6,0.95,0.7,0.8,0.9,1,0.9,0.9,1,1,1,0.9,1,1,0.9,1,1]},
-            {"name":"Madeira (Portugal)","lat":32.7607,"lng":-16.9595,"flag":"🇵🇹","tax":10,"living":42000,"residency":"NHR 2.0 bis mind. 2034","scores":[1,0.9,0.95,0.95,0.95,0.85,0.9,0.9,1,1,0.9,0.9,0.9,0.95,1,1,1,0.95,1,1,0.9,1,1,1,1,0.95,1,1]},
-            {"name":"Malta & Gozo","lat":35.9375,"lng":14.3754,"flag":"🇲🇹","tax":15,"living":54000,"residency":"Permanent Residency €150k","scores":[1,1,0.95,0.9,0.95,1,0.85,0.85,1,1,0.8,0.75,0.9,1,0.95,0.95,1,1,1,1,0.95,1,1,1,1,0.95,1,1]},
-            {"name":"Zypern (Limassol)","lat":34.7071,"lng":33.0226,"flag":"🇨🇾","tax":12.5,"living":52000,"residency":"Permanent Residency €300k","scores":[1,0.9,0.95,0.95,0.95,1,0.85,0.85,1,0.95,0.8,0.8,0.9,1,0.95,0.95,1,1,1,1,0.95,1,1,1,1,0.95,1,1]},
-            {"name":"Mauritius","lat":-20.3484,"lng":57.5522,"flag":"🇲🇺","tax":15,"living":48000,"residency":"Premium Visa (Long-Stay)","scores":[1,0.9,0.95,0.9,0.9,0.9,1,1,1,1,0.85,0.75,0.8,0.5,0.8,0.4,0.7,0.9,1,1,1,0.8,0.9,1,1,0.9,0.95,1]},
-            {"name":"Cayman Islands","lat":19.3133,"lng":-81.2546,"flag":"🇰🇾","tax":0,"living":110000,"residency":"Residency by Investment","scores":[1,1,1,0.95,1,1,1,1,1,1,0.5,0.3,0.9,0.4,0.9,0.7,0.8,0.9,0.9,1,1,1,0.8,0.9,1,0.8,0.7,1]},
-            {"name":"Georgien (Tbilisi)","lat":41.7151,"lng":44.8271,"flag":"🇬🇪","tax":1,"living":30000,"residency":"1% Small Business Status","scores":[0.95,0.8,0.85,0.9,0.85,0.7,0.98,0.98,1,1,0.95,0.95,0.9,0.9,0.8,0.9,0.6,0.85,0.95,0.9,0.9,0.9,1,1,0.8,0.9,1,0.95]},
-            {"name":"Panama","lat":8.9824,"lng":-79.5199,"flag":"🇵🇦","tax":0,"living":48000,"residency":"Friendly Nations Visa","scores":[0.95,0.85,0.9,0.9,0.9,0.8,1,1,1,1,0.85,0.8,0.8,0.8,0.7,0.5,0.6,0.85,1,1,1,0.7,0.9,1,0.9,0.85,0.95,1]},
-            {"name":"Bali","lat":-8.6525,"lng":115.1453,"flag":"🇮🇩","tax":30,"living":36000,"residency":"B211A + KITAS","scores":[0.9,0.3,0.85,0.95,0.85,1,0.7,0.7,0.9,1,0.9,1,0.7,0.2,0.8,0.1,0.7,1,0.9,0.9,0.8,0.6,0.8,0.7,0.7,0.9,0.9,0.9]},
-            {"name":"Phuket","lat":7.9519,"lng":98.3382,"flag":"🇹🇭","tax":35,"living":42000,"residency":"LTR Visa 10 Jahre","scores":[0.9,0.2,0.8,0.95,0.85,1,0.6,0.6,0.9,1,0.9,1,0.8,0.3,0.8,0.3,0.6,1,0.9,0.9,0.7,0.5,0.7,0.7,0.7,0.9,0.9,0.9]},
-            {"name":"Teneriffa","lat":28.2916,"lng":-16.6291,"flag":"🇪🇸","tax":24,"living":45000,"residency":"Non-Lucrative Visa","scores":[1,0.7,0.95,1,0.95,0.9,0.7,0.7,0.8,0.8,0.9,0.9,0.9,0.95,1,1,1,1,1,1,0.9,1,1,1,1,0.95,1,1]},
-            {"name":"Mallorca","lat":39.6953,"lng":2.9787,"flag":"🇪🇸","tax":24,"living":55000,"residency":"Non-Lucrative Visa","scores":[1,0.65,0.95,1,0.95,0.9,0.65,0.65,0.7,0.7,0.85,0.85,0.9,1,1,1,1,1,1,1,0.9,1,1,1,1,0.95,1,1]},
-            {"name":"Monaco","lat":43.7334,"lng":7.4190,"flag":"🇲🇨","tax":0,"living":150000,"residency":"Ordinary Residency","scores":[0.95,0.7,1,1,1,0.7,1,1,1,1,0.5,0.05,0.99,0.95,0.8,1,0.7,0.9,1,1,1,0.9,0.9,0.95,1,1,0.9,1]},
-            {"name":"Andorra","lat":42.5063,"lng":1.5218,"flag":"🇦🇩","tax":10,"living":55000,"residency":"Active Residency","scores":[0.9,0.7,1,0.9,0.95,0.6,0.9,0.95,1,1,0.8,0.7,0.9,0.95,0.7,1,0.7,0.9,1,1,1,0.9,0.9,0.9,1,1,1,1]}
+        // EXPERTEN-DATENBANK (Reale Datenpunkte)
+        const EXPERT_DESTINATIONS = [
+            {"name":"Dubai (UAE)","flag":"🇦🇪","tax":0,"living":78000,"residency":"Golden Visa ab 500k€","scores":[1,1,1,0.95,1,1,1,1,1,1,0.7,0.6,0.95,0.7,0.8,0.9,1,0.9,0.9,1,1,1,0.9,1,1,0.9,1,1], "lat":25.20, "lng":55.27},
+            {"name":"Madeira (Portugal)","flag":"🇵🇹","tax":10,"living":42000,"residency":"NHR 2.0 bis mind. 2034","scores":[1,0.9,0.95,0.95,0.95,0.85,0.9,0.9,1,1,0.9,0.9,0.9,0.95,1,1,1,0.95,1,1,0.9,1,1,1,1,0.95,1,1], "lat":32.76, "lng":-16.95},
+            {"name":"Malta & Gozo","flag":"🇲🇹","tax":15,"living":54000,"residency":"Permanent Residency €150k","scores":[1,1,0.95,0.9,0.95,1,0.85,0.85,1,1,0.8,0.75,0.9,1,0.95,0.95,1,1,1,1,0.95,1,1,1,1,0.95,1,1], "lat":35.93, "lng":14.37},
+            {"name":"Zypern (Limassol)","flag":"🇨🇾","tax":12.5,"living":52000,"residency":"Permanent Residency €300k","scores":[1,0.9,0.95,0.95,0.95,1,0.85,0.85,1,0.95,0.8,0.8,0.9,1,0.95,0.95,1,1,1,1,0.95,1,1,1,1,0.95,1,1], "lat":34.70, "lng":33.02},
+            {"name":"Georgien (Tbilisi)","flag":"🇬🇪","tax":1,"living":30000,"residency":"1% Small Business Status","scores":[0.95,0.8,0.85,0.9,0.85,0.7,0.98,0.98,1,1,0.95,0.95,0.9,0.9,0.8,0.9,0.6,0.85,0.95,0.9,0.9,0.9,1,1,0.8,0.9,1,0.95], "lat":41.71, "lng":44.82},
+            {"name":"Monaco","flag":"🇲🇨","tax":0,"living":150000,"residency":"Ordinary Residency","scores":[0.95,0.7,1,1,1,0.7,1,1,1,1,0.5,0.05,0.99,0.95,0.8,1,0.7,0.9,1,1,1,0.9,0.9,0.95,1,1,0.9,1], "lat":43.73, "lng":7.41},
+            {"name":"Andorra","flag":"🇦🇩","tax":10,"living":55000,"residency":"Active Residency","scores":[0.9,0.7,1,0.9,0.95,0.6,0.9,0.95,1,1,0.8,0.7,0.9,0.95,0.7,1,0.7,0.9,1,1,1,0.9,0.9,0.9,1,1,1,1], "lat":42.50, "lng":1.52},
+            {"name":"Cayman Islands","flag":"🇰🇾","tax":0,"living":110000,"residency":"Residency by Investment","scores":[1,1,1,0.95,1,1,1,1,1,1,0.5,0.3,0.9,0.4,0.9,0.7,0.8,0.9,0.9,1,1,1,0.8,0.9,1,0.8,0.7,1], "lat":19.31, "lng":-81.25},
+            {"name":"Mauritius","flag":"🇲🇺","tax":15,"living":48000,"residency":"Premium Visa (Long-Stay)","scores":[1,0.9,0.95,0.9,0.9,0.9,1,1,1,1,0.85,0.75,0.8,0.5,0.8,0.4,0.7,0.9,1,1,1,0.8,0.9,1,1,0.9,0.95,1], "lat":-20.34, "lng":57.55},
+            {"name":"Panama","flag":"🇵🇦","tax":0,"living":48000,"residency":"Friendly Nations Visa","scores":[0.95,0.85,0.9,0.9,0.9,0.8,1,1,1,1,0.85,0.8,0.8,0.8,0.7,0.5,0.6,0.85,1,1,1,0.7,0.9,1,0.9,0.85,0.95,1], "lat":8.98, "lng":-79.51},
+            {"name":"Teneriffa (Spanien)","flag":"🇪🇸","tax":24,"living":45000,"residency":"Non-Lucrative Visa","scores":[1,0.7,0.95,1,0.95,0.9,0.7,0.7,0.8,0.8,0.9,0.9,0.9,0.95,1,1,1,1,1,1,0.9,1,1,1,1,0.95,1,1], "lat":28.29, "lng":-16.62},
+            {"name":"Mallorca (Spanien)","flag":"🇪🇸","tax":24,"living":55000,"residency":"Non-Lucrative Visa","scores":[1,0.65,0.95,1,0.95,0.9,0.65,0.65,0.7,0.7,0.85,0.85,0.9,1,1,1,1,1,1,1,0.9,1,1,1,1,0.95,1,1], "lat":39.69, "lng":2.97},
+            {"name":"Bali (Indonesien)","flag":"🇮🇩","tax":30,"living":36000,"residency":"B211A + KITAS","scores":[0.9,0.3,0.85,0.95,0.85,1,0.7,0.7,0.9,1,0.9,1,0.7,0.2,0.8,0.1,0.7,1,0.9,0.9,0.8,0.6,0.8,0.7,0.7,0.9,0.9,0.9], "lat":-8.65, "lng":115.14},
+            {"name":"Phuket (Thailand)","flag":"🇹🇭","tax":35,"living":42000,"residency":"LTR Visa 10 Jahre","scores":[0.9,0.2,0.8,0.95,0.85,1,0.6,0.6,0.9,1,0.9,1,0.8,0.3,0.8,0.3,0.6,1,0.9,0.9,0.7,0.5,0.7,0.7,0.7,0.9,0.9,0.9], "lat":7.95, "lng":98.33}
         ];
         
         let destinations = [];
         const TOTAL_LOCATIONS = 258; 
         let weights = new Array(QUESTIONS.length).fill(0.5);
-        let Globe = null;
+        let selectedData = null; 
 
         // ==========================================
         // 2. PROZEDURALE DATEN GENERIERUNG 
         // ==========================================
         function generateProceduralLocations() {
-            destinations = HIGH_VALUE_DESTINATIONS.map(d => ({
-                ...d, calc: {}, id: 'HV_' + d.name.replace(/\W/g, ''), real: true,
-                lat: d.lat, lng: d.lng, altitude: 0.05 
+            // Füge die Expertendaten hinzu
+            destinations = EXPERT_DESTINATIONS.map(d => ({
+                ...d, calc: {}, id: 'HV_' + d.name.replace(/\W/g, ''), real: true
             }));
 
+            // Fülle die Liste mit simulierten Standorten auf 258+
             while (destinations.length < TOTAL_LOCATIONS) {
-                const parent = HIGH_VALUE_DESTINATIONS[Math.floor(Math.random() * HIGH_VALUE_DESTINATIONS.length)];
+                const parent = EXPERT_DESTINATIONS[Math.floor(Math.random() * EXPERT_DESTINATIONS.length)];
+                
+                // Realistischere Streuung der Tax/Living Kosten
+                let simulatedTax = Math.max(0, Math.min(45, parent.tax + Math.round((Math.random() - 0.5) * 20)));
+                if (simulatedTax < 5) simulatedTax = 0; // Tendenz zu 0% Standorten
+                
+                const simulatedLiving = parent.living * (0.6 + Math.random() * 0.8);
+
                 destinations.push({
-                    name: `Region ${destinations.length + 1} (${parent.flag})`,
-                    lat: parent.lat + (Math.random() - 0.5) * 15, lng: parent.lng + (Math.random() - 0.5) * 15,
-                    flag: '🌐', tax: Math.max(5, parent.tax + Math.round((Math.random() - 0.5) * 10)),
-                    living: parent.living * (0.8 + Math.random() * 0.4),
-                    residency: 'Lokales Programm (Simuliert)',
-                    scores: Array(QUESTIONS.length).fill(0).map(() => Math.max(0.2, (Math.random() * 0.3) + 0.3)), 
+                    name: `Sim. Region ${destinations.length + 1} (${parent.flag})`,
+                    flag: '🌐', tax: simulatedTax,
+                    living: Math.round(simulatedLiving / 1000) * 1000,
+                    residency: 'Lokales Programm (Simuliert, ähnlich wie ' + parent.name + ')',
+                    
+                    // Simuliere Scores mit einer Abhängigkeit von den Parent-Scores (aber zufälliger)
+                    scores: parent.scores.map(s => Math.max(0.1, Math.min(1, s + (Math.random() - 0.5) * 0.3))),
+                    
                     real: false, calc: {}, id: 'PR_' + destinations.length,
-                    altitude: Math.random() * 0.05 + 0.01 
+                    lat: parent.lat + (Math.random() - 0.5) * 20, 
+                    lng: parent.lng + (Math.random() - 0.5) * 20 
                 });
             }
-            document.getElementById('progress-fill').style.width = '50%';
         }
 
-
         // ==========================================
-        // 3. GLOBE.GL / THREE-GLOBE INITIALISIERUNG
-        // ==========================================
-
-        function initGlobe() {
-            Globe = window.Globe()
-                (document.getElementById('globe-container'))
-                .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg') 
-                .backgroundColor('#050510')
-                .showAtmosphere(true)
-                .atmosphereColor('#00f3ff')
-                .atmosphereAltitude(0.25)
-                .pointColor(d => {
-                    // Stabile Initialisierung: Fallback, falls calc.score noch nicht existiert
-                    const score = d.calc && d.calc.score ? d.calc.score : 50;
-                    const h = (score / 100) * 0.33; 
-                    return `hsl(${h * 360}, 100%, 60%)`;
-                })
-                .pointAltitude('altitude') 
-                .pointRadius(d => 0.2 + (d.calc && d.calc.score ? d.calc.score / 100 : 0.5) * 0.2) 
-                .pointsData(destinations)
-                .pointLabel(d => `${d.flag} ${d.name} (${Math.round(d.calc.score)}%)`) 
-                .onPointClick(selectLocation) 
-                .controlsState({ 
-                    autoRotate: true, 
-                    autoRotateSpeed: 0.8 
-                });
-            
-            // --- HTML Elements Layer ---
-            Globe.htmlElementsData(destinations)
-                 .htmlLat('lat')
-                 .htmlLng('lng')
-                 .htmlAltitude(d => d.altitude + 0.01) 
-                 .htmlElement(d => {
-                    const el = document.createElement('div');
-                    el.className = 'globe-billboard';
-                    el.id = 'billboard-' + d.id;
-                    el.innerHTML = `${d.flag} ${d.name} <span class="billboard-score">0%</span>`;
-                    return el;
-                 })
-                 .htmlTransitionDuration(500); 
-            
-            // Initiales Rendering und Anpassung
-            window.addEventListener('resize', () => Globe.width(window.innerWidth).height(window.innerHeight));
-            Globe.width(window.innerWidth).height(window.innerHeight);
-
-            document.getElementById('progress-fill').style.width = '75%';
-            
-            // KORREKTUR: Führe calculate() sofort aus, um die d.calc-Daten zu initialisieren
-            calculate(); 
-        }
-
-
-        // ==========================================
-        // 4. CORE ENGINE (SCORING & FINANCE)
+        // 3. CORE ENGINE (SCORING & FINANCE)
         // ==========================================
         
-        function setupUIAndListeners() {
-            const sliderCont = document.getElementById('sliders-container');
-            QUESTIONS.forEach((q, i) => {
-                const div = document.createElement('div');
-                const labelText = `${i+1}. ${q}`;
-                const safeId = `slider-${i}`;
-                div.className = 'control-group';
-                div.innerHTML = `<label for="${safeId}">${labelText}</label><input type="range" id="${safeId}" min="0" max="100" value="50" oninput="updateWeight(${i}, this.value)">`;
-                sliderCont.appendChild(div);
-            });
-
-            ['income', 'adults', 'children'].forEach(id => {
-                document.getElementById(id).addEventListener('input', calculate);
-            });
-            document.getElementById('progress-fill').style.width = '85%';
-        }
-        
-        window.updateWeight = (idx, val) => {
-            weights[idx] = val / 100;
-            calculate();
-        }
-
         window.calculate = () => {
             const income = parseFloat(document.getElementById('income').value) || BASE_INCOME_DE;
             const adults = parseFloat(document.getElementById('adults').value) || 2;
@@ -300,47 +217,71 @@
             const cashflowDE = netDE - (MONTHLY_COST_DE * 12);
 
             destinations.forEach((d) => {
-                // Scoring
+                // Scoring (75% Kriterien + 25% Finanzen)
                 let scoreSum = 0; let weightSum = 0;
                 d.scores.forEach((s, i) => { scoreSum += s * weights[i]; weightSum += weights[i]; });
                 const softScore = weightSum > 0 ? (scoreSum / weightSum) : 0;
-                const net = income * (1 - (d.tax / 100));
+                
+                // Finanzielle Berechnung
+                const effectiveTaxRate = d.tax / 100;
+                const net = income * (1 - effectiveTaxRate);
                 const living = (d.living / (2 + 2 * 0.6)) * familyFactor; 
                 const cashflow = net - living;
-                const maxBonusThreshold = 60000;
+                
+                // Finanz-Bonus (gewichtet Cashflow stark, aber gedeckelt)
+                const maxBonusThreshold = 80000;
                 const financeBonus = Math.min(Math.max(cashflow, 0), maxBonusThreshold) / maxBonusThreshold;
                 const finalScore = (softScore * 0.75) + (financeBonus * 0.25);
                 
                 d.calc = {
                     score: finalScore * 100, net: net, living: living, cashflow: cashflow,
-                    cashflowMonthly: cashflow / 12, wealthDelta: (cashflow - cashflowDE) * 10 
+                    cashflowMonthly: cashflow / 12, wealthDelta: (cashflow - cashflowDE) * 10,
+                    softScore: softScore * 100, financeScore: financeBonus * 100
                 };
-
-                // Update HTML Billboard Score
-                const billboardEl = document.getElementById('billboard-' + d.id);
-                if (billboardEl) {
-                    const scoreEl = billboardEl.querySelector('.billboard-score');
-                    const score = Math.round(d.calc.score);
-                    scoreEl.innerText = score + "%";
-                    scoreEl.style.color = score > 80 ? 'var(--neon-green)' : (score > 50 ? '#ffcc00' : '#ff3366');
-                }
             });
 
-            // Daten-Update an Globe senden, um Farben/Größen zu aktualisieren
-            if (Globe) {
-                Globe.pointsData(destinations);
+            updateRankingList();
+            
+            // Wenn Details angezeigt werden, neu berechnen
+            if (selectedData) {
+                const updatedData = destinations.find(d => d.id === selectedData.id);
+                if (updatedData) {
+                    selectLocation(updatedData);
+                }
             }
-
-            updateRanking();
         }
 
-        function updateRanking() {
+        // ==========================================
+        // 4. UI-FUNKTIONEN (LISTE & DETAILS)
+        // ==========================================
+
+        function setupUI() {
+            const sliderCont = document.getElementById('sliders-container');
+            QUESTIONS.forEach((q, i) => {
+                const div = document.createElement('div');
+                const safeId = `slider-${i}`;
+                div.className = 'control-group';
+                div.innerHTML = `<label for="${safeId}">${i+1}. ${q}</label><input type="range" id="${safeId}" min="0" max="100" value="50" oninput="updateWeight(${i}, this.value)">`;
+                sliderCont.appendChild(div);
+            });
+
+            ['income', 'adults', 'children'].forEach(id => {
+                document.getElementById(id).addEventListener('input', calculate);
+            });
+        }
+        
+        window.updateWeight = (idx, val) => {
+            weights[idx] = val / 100;
+            calculate();
+        }
+
+        function updateRankingList() {
             const list = document.getElementById('ranking-list');
             list.innerHTML = '';
             
+            // Sortiere nach finalem Score absteigend
             const sorted = destinations.map((d) => d)
-                                       .sort((a, b) => b.calc.score - a.calc.score)
-                                       .slice(0, 10);
+                                       .sort((a, b) => b.calc.score - a.calc.score);
 
             sorted.forEach((item, i) => {
                 const el = document.createElement('div');
@@ -351,33 +292,32 @@
                 else color = '#ff3366';
 
                 el.className = 'ranking-item';
+                if (selectedData && item.id === selectedData.id) {
+                    el.classList.add('selected');
+                }
+
                 el.innerHTML = `
                     <div style="display:flex; align-items:center;">
-                        <span style="color:#666; width:20px; font-size:12px;">#${i+1}</span>
-                        <div style="background:${color};" class="score-indicator"></div>
+                        <span class="rank-number">#${i+1}</span>
+                        <div style="width: 5px; height: 16px; background:${color}; border-radius: 2px; margin-right: 10px;"></div>
                         <span>${item.flag} ${item.name}</span>
                     </div>
-                    <span class="rank-score" style="color:${color};">${score}%</span>
+                    <span class="rank-score" style="color:${color}; font-weight: bold;">${score}%</span>
                 `;
                 el.onclick = () => selectLocation(item);
                 list.appendChild(el);
             });
         }
         
-        // ==========================================
-        // 5. INTERAKTIONEN (FLIEGEN & UI)
-        // ==========================================
-
         window.selectLocation = (data) => {
             selectedData = data;
             
-            // Kamera Fly (Nutzung der Globe.GL-Methode)
-            if(Globe) {
-                Globe.pointOfView({ lat: data.lat, lng: data.lng, altitude: 1.5 }, 1500); 
-            }
+            // Visuelle Auswahl aktualisieren
+            document.querySelectorAll('.ranking-item').forEach(item => item.classList.remove('selected'));
+            const selectedItemEl = document.querySelector(`#ranking-list .ranking-item span:nth-child(2)`) 
             
-            // UI-Populate (Unverändert)
-            document.getElementById('country-name').innerText = `${data.flag} ${data.name}`;
+            // UI-Populate
+            document.getElementById('country-name').innerHTML = `${data.flag} ${data.name} ${data.real ? '' : '(Simuliert)'}`;
             
             const score = Math.round(data.calc.score);
             const scoreEl = document.getElementById('match-score');
@@ -400,18 +340,32 @@
 
             document.getElementById('details-container').innerHTML = `
                 <p><strong>Residency Programm:</strong> ${data.residency}</p>
-                <p><strong>Geodaten:</strong> ${data.lat.toFixed(2)}° Lat, ${data.lng.toFixed(2)}° Lng</p>
-                <p><strong>Quelle:</strong> ${data.real ? 'Echter Top-Expat-Standort (Expertendaten)' : 'Simulierter Hub (Prozedural)'}</p>
-                <p style="margin-top:15px; border-top: 1px dashed #333; padding-top:10px;">
-                    <strong>Familien-Fokus:</strong> ${data.scores[27] > 0.8 ? 'Sehr hohe' : 'Moderate'} Kinder-Infrastruktur.
-                </p>
+                <p><strong>Soft-Score (Kriterien):</strong> ${Math.round(data.calc.softScore)}%</p>
+                <p><strong>Finanz-Score (Cashflow):</strong> ${Math.round(data.calc.financeScore)}%</p>
+                <p style="margin-top:10px;">Quelle: ${data.real ? 'Echter Top-Expat-Standort (Expertendaten)' : 'Simulierter Hub (Prozedural Generiert)'}</p>
             `;
 
-            document.getElementById('panel-right').classList.add('active');
-        }
+            // Kriterien Details Grid
+            const criteriaDetailsEl = document.getElementById('criteria-details');
+            criteriaDetailsEl.innerHTML = '';
+            
+            data.scores.forEach((scoreVal, i) => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'criteria-item';
+                const color = scoreVal > 0.9 ? 'var(--neon-green)' : (scoreVal > 0.7 ? '#ffcc00' : '#ff3366');
 
-        window.closeRightPanel = () => {
-            document.getElementById('panel-right').classList.remove('active');
+                itemEl.innerHTML = `
+                    <strong>${i+1}. ${QUESTIONS[i]}</strong>
+                    <span class="score-val" style="color:${color};">${(scoreVal * 100).toFixed(0)} %</span>
+                `;
+                criteriaDetailsEl.appendChild(itemEl);
+            });
+            
+            // Klick auf das Element in der Liste markieren
+            document.getElementById(data.id).classList.add('selected');
+            
+            // Stellen Sie sicher, dass das Detail-Panel sichtbar ist (es ist standardmäßig groß)
+            document.getElementById('ranking-panel').scrollIntoView({ behavior: 'smooth' });
         }
 
         // PDF Generation (Unverändert)
@@ -426,7 +380,7 @@
                 
                 <div style="margin-top:30px; border:1px solid #ccc; padding:20px; border-radius:5px;">
                     <h3 style="color:#333; border-bottom:1px solid #ddd; padding-bottom:10px;">FINANZIELLE KENNZAHLEN (10 JAHRE)</h3>
-                    <p style="font-size:22px; color:#4CAF50; font-weight:bold; margin-top:15px;">ÜBRIG PRO JAHR: ${Math.round(d.calc.cashflow).toLocaleString('de-DE')} €</p>
+                    <p style="font-size:22px; color:#4CAF50; font-weight:bold; margin-top:15px;">ÜBRIG PRO JAHR (CASHFLOW): ${Math.round(d.calc.cashflow).toLocaleString('de-DE')} €</p>
                     <p style="font-size:16px;">Netto-Einkommen: ${Math.round(d.calc.net).toLocaleString('de-DE')} €</p>
                     <p style="font-size:16px;">Geschätzte Lebenshaltung: ${Math.round(d.calc.living).toLocaleString('de-DE')} €</p>
                     <p style="font-size:18px; font-weight:bold; margin-top:20px;">VERMÖGENSVORTEIL vs. DE: ${document.getElementById('wealth-gain').innerText}</p>
@@ -435,7 +389,8 @@
                 <div style="margin-top:20px;">
                     <h3 style="color:#333; border-bottom:1px solid #ddd; padding-bottom:10px;">PROGRAMM & DETAILS</h3>
                     <p><strong>Residency-Programm:</strong> ${d.residency}</p>
-                    ${document.getElementById('details-container').innerHTML}
+                    <p><strong>Kriterien-Score:</strong> ${Math.round(d.calc.softScore)}%</p>
+                    <p><strong>Standort-Quelle:</strong> ${d.real ? 'Experten-Datenbank' : 'Simuliert'}</p>
                 </div>
             `;
 
@@ -447,29 +402,20 @@
             });
         }
 
+
         // --- Initialization ---
         function initApp() {
             generateProceduralLocations();
-            setupUIAndListeners();
-            initGlobe(); // Initialisiert den Globe und die HTML-Layer
+            setupUI();
             
-            // Ladeanimation ausblenden
-            document.getElementById('progress-fill').style.width = '100%';
-            document.getElementById('loader').style.opacity = 0;
-            setTimeout(() => document.getElementById('loader').remove(), 1000);
+            // Führe initiale Berechnung durch
+            calculate(); 
             
-            // KORREKTUR: Verzögerung des ersten Fly-to-Effekts, um dem Globe Zeit zum Initialisieren zu geben
-            setTimeout(() => {
-                if (destinations.length > 0) {
-                    const topDestination = destinations.sort((a, b) => b.calc.score - a.calc.score)[0];
-                    
-                    // Führt den "Fly" aus
-                    Globe.pointOfView({ lat: topDestination.lat, lng: topDestination.lng, altitude: 1.5 }, 1500);
-                    
-                    // Wählt den Standort im UI aus
-                    selectLocation(topDestination);
-                }
-            }, 2500); // 2.5 Sekunden Wartezeit
+            // Wähle den besten Standort automatisch aus, um Details anzuzeigen
+            const topDestination = destinations.sort((a, b) => b.calc.score - a.calc.score)[0];
+            if (topDestination) {
+                selectLocation(topDestination);
+            }
         }
 
         window.onload = initApp;
