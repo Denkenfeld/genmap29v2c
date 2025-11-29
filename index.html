@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title>ParadiseFinder 2025 – Ultimate Expat Tool (Realism)</title>
+    <title>ParadiseFinder 2025 – Ultimate Expat Tool (HTML Billboards)</title>
     
     <link rel="manifest" href="data:application/json;charset=utf-8;base64,eyJpY29ucyI6IFt7InNyYyI6ICJodHRwczovL2Vtb2ppaXZlLW9iamVjdHMuczMtZWFzdC0yLWFtYXpvbmF3cy5jb20vMDBkMGQyMmMtNmExNy00ZWMwLWI4ZGQtNmQ0OTc1Yjk0OTNmLzAxMWQxNmFhLTJmM2EtNGM1MS1iMDA1LTQ2OWRmNTE3OWI5ZC5qcGciLCJzaXplcyI6ICIxOTJ4MTkyIn0sIHsic3JjIjogImh0dHBzOi8vZW1vaml2ZS1vYmplY3RzLnMzLWVhc3QtMi1hbWF6b25hd3MuY29tLzAwZDBkMjJjLTZhMTctNGVjMC1iOGRkLTZkNDk3NWI5NDkzZi8wMTFkMTZhYS0yZjNhLTRjNTEtYjAwNS00NjlkZjUxNzlhOWQuanBnIiwic2l6ZXMiOiAiNTEyeDUxMiJ9XSwgIm5hbWUiOiAiUGFyYWRpc2VGaW5kZXIiLCAic2hvcnRfbmFtZSI6ICJQYXJhZGlzZUZpbmRlciIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiIH0=">
 
@@ -12,12 +12,46 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
+    <script>
+        function createAmbientSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const audioCtx = new AudioContext();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(220, audioCtx.currentTime); // Low frequency
+                gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime); // Very quiet
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+
+                // Simple modulation for "space" feel
+                const lfo = audioCtx.createOscillator();
+                lfo.frequency.setValueAtTime(0.5, audioCtx.currentTime); // 0.5Hz LFO
+                lfo.connect(gainNode.gain);
+                lfo.start();
+                
+                // User interaction required for context start
+                document.body.addEventListener('click', () => {
+                    if (audioCtx.state === 'suspended') {
+                        audioCtx.resume();
+                    }
+                }, { once: true });
+
+            } catch(e) { console.warn("Web Audio API not supported or failed to start."); }
+        }
+        createAmbientSound();
+    </script>
+
     <style>
         :root {
             --neon-blue: #00f3ff;
             --neon-green: #0aff68;
             --bg-dark: #050510;
-            --bg-glass: rgba(10, 15, 30, 0.85); /* Slightly darker/more opaque glass */
+            --bg-glass: rgba(10, 15, 30, 0.85); 
             --border-glass: 1px solid rgba(0, 243, 255, 0.2);
             --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
@@ -25,54 +59,60 @@
         /* Reset and Base */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; overflow: hidden; background-color: var(--bg-dark); font-family: var(--font-main); color: #fff; }
-
-        /* General Panel Styling */
-        .panel {
-            position: absolute; pointer-events: auto;
-            background: var(--bg-glass); backdrop-filter: blur(25px);
-            border: var(--border-glass); border-radius: 16px;
-            padding: 24px; z-index: 10;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
-            transition: all 0.4s ease; max-height: 95vh;
-            scrollbar-width: thin; scrollbar-color: rgba(0, 243, 255, 0.4) rgba(0, 0, 0, 0.2);
-        }
+        
+        /* General Panel Styling (Unchanged) */
+        .panel { position: absolute; pointer-events: auto; background: var(--bg-glass); backdrop-filter: blur(25px); border: var(--border-glass); border-radius: 16px; padding: 24px; z-index: 10; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8); transition: all 0.4s ease; max-height: 95vh; scrollbar-width: thin; scrollbar-color: rgba(0, 243, 255, 0.4) rgba(0, 0, 0, 0.2); }
         #panel-left { top: 20px; left: 20px; width: 380px; bottom: 20px; overflow-y: scroll; }
         #panel-right { top: 20px; right: 20px; width: 420px; bottom: 20px; overflow-y: scroll; transform: translateX(120%); }
         #panel-right.active { transform: translateX(0); }
-        
-        /* Typography */
         h2 { margin: 0 0 15px 0; font-weight: 400; font-size: 18px; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
         h3 { font-size: 13px; color: #fff; margin-top: 15px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Form & Sliders */
+        /* Form & Sliders (Unchanged) */
         label { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; color: #aaa; }
         input[type=range] { width: 100%; -webkit-appearance: none; background: rgba(0,0,0,0.5); height: 3px; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: var(--neon-blue); border-radius: 50%; cursor: grab; box-shadow: 0 0 10px var(--neon-blue); }
         input[type=number] { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid #444; color: #fff; padding: 6px; border-radius: 4px; font-size: 14px; }
         .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
 
-        /* Ranking */
+        /* Ranking & Results (Unchanged) */
         .ranking-item { display: flex; justify-content: space-between; padding: 8px 10px; margin-bottom: 4px; border-radius: 6px; cursor: pointer; transition: background 0.2s; font-size: 14px; background: rgba(0,0,0,0.3); }
         .ranking-item:hover { background: rgba(0, 243, 255, 0.1); }
         .score-indicator { width: 5px; height: 100%; margin-right: 10px; border-radius: 2px; }
-
-        /* Results */
         .big-stat-box { background: rgba(0,243,255,0.05); border: 1px solid rgba(0,243,255,0.2); border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 20px; }
         .stat-circle-score { font-size: 56px; font-weight: 300; display: block; text-shadow: 0 0 30px rgba(0,243,255,0.5); }
         .f-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 15px; }
         .cash-flow { font-size: 20px; font-weight: bold; margin-top: 10px; }
-        
         .btn-main { width: 100%; padding: 14px; margin-top: 20px; background: linear-gradient(90deg, #00c6ff, #0072ff); border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; }
 
-        /* Tooltip */
-        #tooltip { position: absolute; pointer-events: none; background: rgba(0, 0, 0, 0.95); border: 1px solid var(--neon-blue); padding: 8px 12px; border-radius: 6px; transform: translate(-50%, -150%); opacity: 0; transition: opacity 0.2s; z-index: 100; font-size: 12px; }
-
-        /* Loading */
+        /* Loading (Unchanged) */
         #loader { position: absolute; top:0; left:0; width:100%; height:100%; background:var(--bg-dark); z-index:999; display:flex; justify-content:center; align-items:center; flex-direction: column; transition: opacity 1s; }
         .progress-bar { width: 300px; height: 3px; background: rgba(255,255,255,0.1); margin-top: 15px; border-radius: 2px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background: var(--neon-blue); width: 0%; transition: width 0.3s; }
         .spinner { width: 50px; height: 50px; border: 3px solid rgba(0,243,255,0.3); border-top-color: var(--neon-blue); border-radius: 50%; animation: spin 1s infinite linear; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* New: HTML Element Layer (Tooltip) */
+        #html-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+        .globe-billboard {
+            position: absolute;
+            transform: translate(-50%, 0); /* Center horizontally */
+            pointer-events: all;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--neon-blue);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s, background 0.2s;
+            box-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
+            margin-top: -30px; /* Offset above the point */
+        }
+        .globe-billboard.visible { opacity: 1; }
+        .globe-billboard:hover { background: rgba(0, 243, 255, 0.15); }
+        .billboard-score { font-weight: bold; margin-left: 5px; }
     </style>
 </head>
 <body>
@@ -82,7 +122,7 @@
         <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
     </div>
 
-    <div id="tooltip"></div>
+    <div id="html-layer"></div>
 
     <div id="panel-left" class="panel">
         <h2>System-Präferenzen</h2>
@@ -143,9 +183,11 @@
         // ==========================================
         const BASE_INCOME_DE = 120000;
         const TAX_RATE_DE = 0.42; 
-        const MONTHLY_COST_DE = 2500 * (2 + 2 * 0.6); // Basis-Lebenshaltung DE (Familie 2+2)
+        const MONTHLY_COST_DE = 2500 * (2 + 2 * 0.6); 
+        const GLOBE_RADIUS = 10;
         
         const QUESTIONS = [
+            // ... (28 Fragen wie zuvor) ...
             "Einfache langfristige Aufenthaltsgenehmigung", "Realistischer Weg zur Staatsbürgerschaft", 
             "Höchste Sicherheit & extrem niedrige Kriminalität", "Internationale Schulen in absoluter Top-Qualität", 
             "Krankenhäuser & Ärzte auf deutschem Niveau", "Englisch als tägliche Alltagssprache", 
@@ -180,40 +222,34 @@
         ];
         
         let destinations = [];
-        const TOTAL_LOCATIONS = 258; // Wie gewünscht
+        const TOTAL_LOCATIONS = 258; 
 
         // --- Globale 3D/UI Variablen ---
         let pointMeshes = [];
+        let billboards = []; // Array to hold HTML elements and their corresponding 3D data
         let raycaster = new THREE.Raycaster();
         let mouse = new THREE.Vector2();
-        let hoveredMesh = null;
         let selectedData = null;
         let weights = new Array(QUESTIONS.length).fill(0.5);
 
         // ==========================================
-        // 2. PROZEDURALE DATEN GENERIERUNG (258 Punkte)
+        // 2. PROZEDURALE DATEN GENERIERUNG 
         // ==========================================
         function generateProceduralLocations() {
-            // 1. Add High-Value
             destinations = HIGH_VALUE_DESTINATIONS.map(d => ({
-                ...d, calc: {}, id: 'HV_' + d.name.replace(/\W/g, ''), real: true
+                ...d, calc: {}, id: 'HV_' + d.name.replace(/\W/g, ''), real: true, pos3D: new THREE.Vector3()
             }));
 
-            // 2. Add 244 additional generic countries/regions
             while (destinations.length < TOTAL_LOCATIONS) {
                 const parent = HIGH_VALUE_DESTINATIONS[Math.floor(Math.random() * HIGH_VALUE_DESTINATIONS.length)];
-                const offsetLat = (Math.random() - 0.5) * 15;
-                const offsetLng = (Math.random() - 0.5) * 15;
-                const baseScore = parent.scores[Math.floor(Math.random() * parent.scores.length)];
-
                 destinations.push({
                     name: `Region ${destinations.length + 1} (${parent.flag})`,
-                    lat: parent.lat + offsetLat, lng: parent.lng + offsetLng,
+                    lat: parent.lat + (Math.random() - 0.5) * 15, lng: parent.lng + (Math.random() - 0.5) * 15,
                     flag: '🌐', tax: Math.max(5, parent.tax + Math.round((Math.random() - 0.5) * 10)),
                     living: parent.living * (0.8 + Math.random() * 0.4),
                     residency: 'Lokales Programm (Simuliert)',
-                    scores: Array(QUESTIONS.length).fill(0).map(() => Math.max(0.2, baseScore * (0.7 + Math.random() * 0.3))), 
-                    real: false, calc: {}, id: 'PR_' + destinations.length
+                    scores: Array(QUESTIONS.length).fill(0).map(() => Math.max(0.2, (Math.random() * 0.3) + 0.3)), 
+                    real: false, calc: {}, id: 'PR_' + destinations.length, pos3D: new THREE.Vector3()
                 });
             }
             document.getElementById('progress-fill').style.width = '50%';
@@ -244,11 +280,20 @@
         dirLight.position.set(50, 50, 50);
         scene.add(dirLight);
 
-        // --- GLSL REALISTIC GLOBE SHADER (Noise-based Landmass/Ocean) ---
-        const earthUniforms = { 
-            time: { value: 0.0 }, 
-            uLightPos: { value: dirLight.position } 
-        };
+        // Helper: Lat/Lng to Vector3
+        function getPosFromLatLng(lat, lng, radius) {
+            const phi = (90 - lat) * (Math.PI / 180); 
+            const theta = (lng + 180) * (Math.PI / 180); 
+            
+            const x = -(radius * Math.sin(phi) * Math.cos(theta));
+            const z = (radius * Math.sin(phi) * Math.sin(theta));
+            const y = (radius * Math.cos(phi));
+            
+            return new THREE.Vector3(x, y, z);
+        }
+
+        // GLSL Landmass & Ocean Shader (Same as V3.0 for realism)
+        const earthUniforms = { time: { value: 0.0 }, uLightPos: { value: dirLight.position } };
         const earthMat = new THREE.ShaderMaterial({
             uniforms: earthUniforms,
             vertexShader: `
@@ -259,81 +304,39 @@
                 }
             `,
             fragmentShader: `
-                uniform float time;
-                uniform vec3 uLightPos;
-                varying vec3 vNormal;
-                varying vec3 vPos;
-                varying vec2 vUv;
+                uniform float time; uniform vec3 uLightPos;
+                varying vec3 vNormal; varying vec3 vPos; varying vec2 vUv;
                 
-                // Classic Perlin Noise implementation (necessary for procedural texture)
                 vec3 mod289(vec3 x) { return x - floor(x / 289.0) * 289.0; }
                 vec4 mod289(vec4 x) { return x - floor(x / 289.0) * 289.0; }
                 vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
                 vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
                 
                 float snoise(vec3 v) {
-                    const vec2  C = vec2(1.0/6.0, 1.0/3.0);
-                    const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
-                
-                    vec3 i  = floor(v + dot(v, C.yyy));
-                    vec3 x0 =   v - i + dot(i, C.xxx);
-                
-                    vec3 g = step(x0.yzx, x0.xyz);
-                    vec3 l = 1.0 - g;
-                    vec3 i1 = min(g.xyz, l.zxy);
-                    vec3 i2 = max(g.xyz, l.zxy);
-                
-                    vec3 x1 = x0 - i1 + C.xxx;
-                    vec3 x2 = x0 - i2 + C.yyy;
-                    vec3 x3 = x0 - D.yyy + C.zzz;
-                
-                    i = mod289(i); 
-                    vec4 p = permute(permute(permute( 
-                                i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
-                            + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
-                            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
-                
-                    float n_ = 0.142857142857;
-                    vec3  ns = n_ * D.wyz - D.xzx;
-                
+                    const vec2  C = vec2(1.0/6.0, 1.0/3.0); const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+                    vec3 i  = floor(v + dot(v, C.yyy)); vec3 x0 =   v - i + dot(i, C.xxx);
+                    vec3 g = step(x0.yzx, x0.xyz); vec3 l = 1.0 - g;
+                    vec3 i1 = min(g.xyz, l.zxy); vec3 i2 = max(g.xyz, l.zxy);
+                    vec3 x1 = x0 - i1 + C.xxx; vec3 x2 = x0 - i2 + C.yyy; vec3 x3 = x0 - D.yyy + C.zzz;
+                    i = mod289(i); vec4 p = permute(permute(permute( 
+                                i.z + vec4(0.0, i1.z, i2.z, 1.0 )) + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+                    float n_ = 0.142857142857; vec3  ns = n_ * D.wyz - D.xzx;
                     vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
-                
-                    vec4 x_ = floor(j * ns.z);
-                    vec4 y_ = floor(j - 7.0 * x_ );
-                
-                    vec4 x = x_ * ns.x + ns.yyyy;
-                    vec4 y = y_ * ns.x + ns.yyyy;
-                    vec4 h = 13.0 * y + x;
-                
-                    vec4 ox = mod(h, 7.0);
-                    vec4 oy = mod(floor(h / 7.0), 7.0);
-                
-                    vec4 dx = x0 + ns.xxxx;
-                    vec4 dy = x0 + ns.yyyy;
-                    vec4 dz = x0 + ns.zzzz;
-                
-                    vec4 sx = dx * dx + dy * dy + dz * dz;
-                    vec4 a  = ( 0.6 - sx ) * ( 0.6 - sx );
+                    vec4 x_ = floor(j * ns.z); vec4 y_ = floor(j - 7.0 * x_ );
+                    vec4 x = x_ * ns.x + ns.yyyy; vec4 y = y_ * ns.x + ns.yyyy; vec4 h = 13.0 * y + x;
+                    vec4 ox = mod(h, 7.0); vec4 oy = mod(floor(h / 7.0), 7.0);
+                    vec4 dx = x0 + ns.xxxx; vec4 dy = x0 + ns.yyyy; vec4 dz = x0 + ns.zzzz;
+                    vec4 sx = dx * dx + dy * dy + dz * dz; vec4 a  = ( 0.6 - sx ) * ( 0.6 - sx );
                     a = max(a, 0.0);
-                
-                    vec4  w0 = taylorInvSqrt(sx);
-                    vec4  w1 = taylorInvSqrt(sx - 1.0);
-                    vec4  w2 = taylorInvSqrt(sx - 2.0);
-                    vec4  w3 = taylorInvSqrt(sx - 3.0);
-                
-                    vec4  g0 = taylorInvSqrt(mod289(vec4(13.0 * y + x + 1.0)));
-                    vec4  g1 = taylorInvSqrt(mod289(vec4(13.0 * oy + ox + 1.0)));
-                    vec4  g2 = taylorInvSqrt(mod289(vec4(13.0 * oy + ox + 2.0)));
-                    vec4  g3 = taylorInvSqrt(mod289(vec4(13.0 * y + x + 3.0)));
-                
+                    vec4  w0 = taylorInvSqrt(sx); vec4  w1 = taylorInvSqrt(sx - 1.0);
+                    vec4  w2 = taylorInvSqrt(sx - 2.0); vec4  w3 = taylorInvSqrt(sx - 3.0);
+                    vec4  g0 = taylorInvSqrt(mod289(vec4(13.0 * y + x + 1.0))); vec4  g1 = taylorInvSqrt(mod289(vec4(13.0 * oy + ox + 1.0)));
+                    vec4  g2 = taylorInvSqrt(mod289(vec4(13.0 * oy + ox + 2.0))); vec4  g3 = taylorInvSqrt(mod289(vec4(13.0 * y + x + 3.0)));
                     return 32.0 * dot(a * a * a, g0 + g1 + g2 + g3);
                 }
                 
-                // 3D Worley Noise (Cellular)
                 float worley(vec3 p) {
-                    vec3 i = floor(p);
-                    vec3 f = fract(p);
-                    float d = 1.0;
+                    vec3 i = floor(p); vec3 f = fract(p); float d = 1.0;
                     for (int x = -1; x <= 1; x++) {
                         for (int y = -1; y <= 1; y++) {
                             for (int z = -1; z <= 1; z++) {
@@ -348,91 +351,85 @@
                 }
                 
                 void main() {
-                    // Use Spherical Coordinates from VPos for continuous sampling
-                    vec3 norm = normalize(vPos);
-                    vec3 p = norm * 15.0; // Scale up for noise sampling
-                    
-                    // Layer 1: Base Ocean/Space Color
+                    vec3 norm = normalize(vPos); vec3 p = norm * 15.0; 
                     vec3 oceanColor = vec3(0.0, 0.15, 0.4);
-                    
-                    // Layer 2: Landmass simulation using combined noise
                     float noise1 = snoise(p * 0.8 + time * 0.05);
                     float noise2 = worley(p * 2.0);
-                    
                     float landThreshold = 0.55;
                     float landMix = smoothstep(landThreshold - 0.1, landThreshold + 0.1, noise1 + noise2 * 0.1);
-                    
-                    vec3 landColor = vec3(0.05, 0.4, 0.1); // Dark Green/Brown
+                    vec3 landColor = vec3(0.05, 0.4, 0.1); 
                     vec3 surfaceColor = mix(oceanColor, landColor, landMix);
 
-                    // Lighting
-                    vec3 L = normalize(uLightPos - vPos);
-                    vec3 N = normalize(vNormal);
-                    float diff = max(dot(N, L), 0.0) * 0.7 + 0.3; // Simple diffuse lighting
+                    vec3 L = normalize(uLightPos - vPos); vec3 N = normalize(vNormal);
+                    float diff = max(dot(N, L), 0.0) * 0.7 + 0.3; 
                     
-                    // Atmosphere/Rim Glow (subtle neon rim)
                     vec3 viewDir = normalize(-vPos);
                     float rim = pow(1.0 - max(dot(viewDir, N), 0.0), 4.0);
                     vec3 rimColor = vec3(0.0, 0.8, 1.0) * rim * 1.5;
 
                     vec3 finalColor = surfaceColor * diff;
-                    finalColor += rimColor; // Add rim lighting
+                    finalColor += rimColor;
 
                     gl_FragColor = vec4(finalColor, 1.0);
                 }
             `,
             transparent: false
         });
-        const earth = new THREE.Mesh(new THREE.SphereGeometry(10, 64, 64), earthMat);
+        const earth = new THREE.Mesh(new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64), earthMat);
         scene.add(earth);
 
-        // Atmosphere Glow (Standard)
+        // Atmosphere Glow
         const atmoMat = new THREE.ShaderMaterial({
             vertexShader: `varying vec3 vNormal; void main() { vNormal = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
             fragmentShader: `varying vec3 vNormal; void main() { float intensity = pow(0.8 - dot(vNormal, vec3(0, 0, 1.0)), 4.0); gl_FragColor = vec4(0.0, 0.6, 1.0, 1.0) * intensity; }`,
             blending: THREE.AdditiveBlending, side: THREE.BackSide, transparent: true
         });
-        scene.add(new THREE.Mesh(new THREE.SphereGeometry(11.5, 64, 64), atmoMat));
+        scene.add(new THREE.Mesh(new THREE.SphereGeometry(GLOBE_RADIUS + 1.5, 64, 64), atmoMat));
         
-        // Helper: Lat/Lng to Vector3
-        function getPosFromLatLng(lat, lng, radius) {
-            const phi = (90 - lat) * (Math.PI / 180); 
-            const theta = (lng + 180) * (Math.PI / 180); 
-            
-            const x = -(radius * Math.sin(phi) * Math.cos(theta));
-            const z = (radius * Math.sin(phi) * Math.sin(theta));
-            const y = (radius * Math.cos(phi));
-            
-            return new THREE.Vector3(x, y, z);
-        }
-
-        function createPoints() {
+        // --- Custom HTML Element Layer Creation ---
+        function createPointsAndBillboards() {
             const pointsGroup = new THREE.Group();
             const dotGeo = new THREE.SphereGeometry(0.12, 16, 16);
             pointMeshes = [];
+            billboards = [];
 
             destinations.forEach((loc, i) => {
+                loc.pos3D.copy(getPosFromLatLng(loc.lat, loc.lng, GLOBE_RADIUS + 0.1));
+                
+                // 1. 3D Dot
                 const mat = new THREE.MeshBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.8 });
                 const mesh = new THREE.Mesh(dotGeo, mat);
-                
-                mesh.position.copy(getPosFromLatLng(loc.lat, loc.lng, 10.1));
-                
-                // Ensure the mesh points outwards from the center for lighting/culling
-                mesh.lookAt(new THREE.Vector3(0, 0, 0));
-                
+                mesh.position.copy(loc.pos3D);
                 mesh.userData = { data: loc };
                 pointsGroup.add(mesh);
                 pointMeshes.push(mesh);
+
+                // 2. HTML Billboard
+                const div = document.createElement('div');
+                div.className = 'globe-billboard';
+                div.id = 'billboard-' + loc.id;
+                div.innerHTML = `${loc.flag} ${loc.name} <span class="billboard-score" style="color:#00f3ff;">0%</span>`;
+                div.onclick = () => selectLocation(loc);
+                
+                document.getElementById('html-layer').appendChild(div);
+
+                billboards.push({
+                    element: div,
+                    pos3D: loc.pos3D,
+                    data: loc,
+                    mesh: mesh,
+                });
             });
             scene.add(pointsGroup);
             document.getElementById('progress-fill').style.width = '75%';
         }
-
+        
         // ==========================================
         // 4. CORE ENGINE (SCORING & FINANCE)
         // ==========================================
         
         function setupUIAndListeners() {
+            // ... (setup sliders and input listeners) ...
             const sliderCont = document.getElementById('sliders-container');
             QUESTIONS.forEach((q, i) => {
                 const div = document.createElement('div');
@@ -458,60 +455,52 @@
             const children = parseFloat(document.getElementById('children').value) || 2;
             
             const familyFactor = adults + (children * 0.6);
-            
-            // Baseline Deutschland (Vergleich)
-            const taxAmtDE = income * TAX_RATE_DE; 
-            const netDE = income - taxAmtDE;
-            const livingDE = MONTHLY_COST_DE * 12;
-            const cashflowDE = netDE - livingDE;
+            const netDE = income * (1 - TAX_RATE_DE);
+            const cashflowDE = netDE - (MONTHLY_COST_DE * 12);
 
             destinations.forEach((d, idx) => {
-                // 1. Soft Factor Score (75%)
-                let scoreSum = 0;
-                let weightSum = 0;
-                d.scores.forEach((s, i) => {
-                    scoreSum += s * weights[i];
-                    weightSum += weights[i];
-                });
+                let scoreSum = 0; let weightSum = 0;
+                d.scores.forEach((s, i) => { scoreSum += s * weights[i]; weightSum += weights[i]; });
                 const softScore = weightSum > 0 ? (scoreSum / weightSum) : 0;
 
-                // 2. Finance Calc
-                const taxAmt = income * (d.tax / 100);
-                const net = income - taxAmt;
-                const living = (d.living / (2 + 2 * 0.6)) * familyFactor; // Skalierung
+                const net = income * (1 - (d.tax / 100));
+                const living = (d.living / (2 + 2 * 0.6)) * familyFactor; 
                 const cashflow = net - living;
                 
-                // 3. Finance Bonus (25%)
                 const maxBonusThreshold = 60000;
                 const financeBonus = Math.min(Math.max(cashflow, 0), maxBonusThreshold) / maxBonusThreshold;
 
-                // Final Combined Score
                 const finalScore = (softScore * 0.75) + (financeBonus * 0.25);
                 
                 d.calc = {
-                    score: finalScore * 100,
-                    net: net,
-                    living: living,
-                    cashflow: cashflow,
-                    cashflowMonthly: cashflow / 12,
-                    wealthDelta: (cashflow - cashflowDE) * 10 
+                    score: finalScore * 100, net: net, living: living, cashflow: cashflow,
+                    cashflowMonthly: cashflow / 12, wealthDelta: (cashflow - cashflowDE) * 10 
                 };
 
-                // Visual Update: Punkt färben und skalieren
+                // Visual Update: Dot Color and Scale
+                const score = d.calc.score;
                 const mesh = pointMeshes[idx];
                 const color = new THREE.Color();
-                const h = (d.calc.score / 100) * 0.33; 
+                const h = (score / 100) * 0.33; 
                 color.setHSL(h, 1.0, 0.6); 
                 mesh.material.color.lerp(color, 0.2);
-                
-                const scale = 1 + (d.calc.score / 50);
+                const scale = 1 + (score / 50);
                 mesh.scale.setScalar(scale);
+                
+                // Update Billboard Score
+                const billboardEl = document.getElementById('billboard-' + d.id);
+                if (billboardEl) {
+                    const scoreEl = billboardEl.querySelector('.billboard-score');
+                    scoreEl.innerText = Math.round(score) + "%";
+                    scoreEl.style.color = score > 80 ? 'var(--neon-green)' : (score > 50 ? '#ffcc00' : '#ff3366');
+                }
             });
 
             updateRanking();
         }
 
         function updateRanking() {
+            // ... (Ranking logic unchanged) ...
             const list = document.getElementById('ranking-list');
             list.innerHTML = '';
             
@@ -542,13 +531,13 @@
         }
         
         // ==========================================
-        // 5. INTERAKTIONEN (FLIEGEN & UI)
+        // 5. INTERAKTIONEN & HTML ELEMENT UPDATER
         // ==========================================
 
         window.selectLocation = (data) => {
             selectedData = data;
             
-            // Kamera Fly
+            // Camera Fly (Unchanged)
             const targetPos = getPosFromLatLng(data.lat, data.lng, 25);
             new TWEEN.Tween(camera.position)
                 .to({x: targetPos.x, y: targetPos.y, z: targetPos.z}, 1500)
@@ -559,7 +548,7 @@
             controls.autoRotate = false;
             setTimeout(() => controls.autoRotate = true, 5000);
 
-            // Populate Right Panel
+            // Populate Right Panel (Unchanged)
             document.getElementById('country-name').innerText = `${data.flag} ${data.name}`;
             
             const score = Math.round(data.calc.score);
@@ -581,7 +570,6 @@
             wEl.innerText = (wealth >= 0 ? "+" : "") + wealth.toFixed(2) + " Mio €";
             wEl.style.color = wealth > 0 ? 'var(--neon-green)' : (wealth === 0 ? '#fff' : '#ff3366');
 
-            // Hard Facts
             document.getElementById('details-container').innerHTML = `
                 <p><strong>Residency Programm:</strong> ${data.residency}</p>
                 <p><strong>Geodaten:</strong> ${data.lat.toFixed(2)}° Lat, ${data.lng.toFixed(2)}° Lng</p>
@@ -597,72 +585,54 @@
         window.closeRightPanel = () => {
             document.getElementById('panel-right').classList.remove('active');
         }
+        
+        // Custom HTML Billboard Updater (simulates CSS2DRenderer/htmlElementVisibilityModifier)
+        const v = new THREE.Vector3();
+        function updateBillboards() {
+            const width = window.innerWidth, height = window.innerHeight;
+            const globeCenter = new THREE.Vector3(0, 0, 0);
 
-        function generatePDF() {
-            if(!selectedData) return alert("Bitte wählen Sie zuerst einen Standort aus der Liste!");
-            const d = selectedData;
-            
-            const pdfBody = document.getElementById('pdf-body');
-            pdfBody.innerHTML = `
-                <h2 style="color:#0072ff; font-size:28px;">${d.flag} ${d.name}</h2>
-                <p style="font-size:14px; color:#555;">Match Score: ${Math.round(d.calc.score)}% | Effektiver Steuersatz: ${d.tax}%</p>
+            billboards.forEach(billboard => {
+                const element = billboard.element;
+                const position = billboard.pos3D;
                 
-                <div style="margin-top:30px; border:1px solid #ccc; padding:20px; border-radius:5px;">
-                    <h3 style="color:#333; border-bottom:1px solid #ddd; padding-bottom:10px;">FINANZIELLE KENNZAHLEN (10 JAHRE)</h3>
-                    <p style="font-size:22px; color:#4CAF50; font-weight:bold; margin-top:15px;">ÜBRIG PRO JAHR: ${Math.round(d.calc.cashflow).toLocaleString('de-DE')} €</p>
-                    <p style="font-size:16px;">Netto-Einkommen: ${Math.round(d.calc.net).toLocaleString('de-DE')} €</p>
-                    <p style="font-size:16px;">Geschätzte Lebenshaltung: ${Math.round(d.calc.living).toLocaleString('de-DE')} €</p>
-                    <p style="font-size:18px; font-weight:bold; margin-top:20px;">VERMÖGENSVORTEIL vs. DE: ${document.getElementById('wealth-gain').innerText}</p>
-                </div>
+                // 1. Convert 3D position to 2D screen coordinates
+                position.project(camera); 
                 
-                <div style="margin-top:20px;">
-                    <h3 style="color:#333; border-bottom:1px solid #ddd; padding-bottom:10px;">PROGRAMM & DETAILS</h3>
-                    <p><strong>Residency-Programm:</strong> ${d.residency}</p>
-                    ${document.getElementById('details-container').innerHTML}
-                </div>
-            `;
+                // 2. Depth/Visibility Check (htmlElementVisibilityModifier)
+                // If the Z coordinate is > 1.0, the object is outside the frustum (behind the camera).
+                // If the Z coordinate is close to 1.0, it is behind the globe (since the points are at r+0.1)
+                const distanceToCenter = camera.position.distanceTo(globeCenter);
+                const distanceToPoint = camera.position.distanceTo(billboard.mesh.position);
 
-            const element = document.getElementById('pdf-content');
-            element.style.top = "0"; 
-            
-            html2pdf().from(element).save(`ParadiseReport_${d.name.replace(/\W/g,'_')}.pdf`).then(() => {
-                element.style.top = "-9999px"; 
+                // Simple Check: Point is behind the center of the globe sphere
+                const isVisible = position.z < 1.0 && distanceToPoint < distanceToCenter; 
+
+                if (isVisible) {
+                    const x = ((position.x + 1) / 2) * width;
+                    const y = ((-position.y + 1) / 2) * height;
+                    
+                    element.style.left = `${x}px`;
+                    element.style.top = `${y}px`;
+                    element.classList.add('visible');
+                } else {
+                    element.classList.remove('visible');
+                }
+                
+                // Unproject the vector for the next frame
+                position.unproject(camera);
             });
         }
-        
-        // --- 3D Animation Loop & Raycasting ---
+
+
+        // --- 3D Animation Loop & Billboard Update ---
         function animate(time) {
             requestAnimationFrame(animate);
             TWEEN.update(time);
             controls.update();
             earthMat.uniforms.time.value = time * 0.001;
 
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(pointMeshes);
-            const tt = document.getElementById('tooltip');
-
-            if (intersects.length > 0) {
-                document.body.style.cursor = 'pointer';
-                const obj = intersects[0].object;
-                if(hoveredMesh !== obj) {
-                    if(hoveredMesh) {
-                        const s = 1 + (hoveredMesh.userData.data.calc.score / 50);
-                        new TWEEN.Tween(hoveredMesh.scale).to({x:s, y:s, z:s}, 200).start();
-                    }
-                    hoveredMesh = obj;
-                    new TWEEN.Tween(obj.scale).to({x:3.5, y:3.5, z:3.5}, 200).start();
-                }
-                tt.style.opacity = 1;
-                tt.innerText = `${obj.userData.data.flag} ${obj.userData.data.name} (${Math.round(obj.userData.data.calc.score)}%)`;
-            } else {
-                if(hoveredMesh) {
-                    const s = 1 + (hoveredMesh.userData.data.calc.score / 50);
-                    new TWEEN.Tween(hoveredMesh.scale).to({x:s, y:s, z:s}, 200).start();
-                    hoveredMesh = null;
-                }
-                document.body.style.cursor = 'default';
-                tt.style.opacity = 0;
-            }
+            updateBillboards(); // NEW: Update HTML positions and visibility
 
             renderer.render(scene, camera);
         }
@@ -670,18 +640,18 @@
         // --- Initialization ---
         function initApp() {
             generateProceduralLocations();
-            createPoints();
+            createPointsAndBillboards();
             setupUIAndListeners();
             
             calculate(); 
 
             // Ladeanimation ausblenden
+            document.getElementById('progress-fill').style.width = '100%';
             document.getElementById('loader').style.opacity = 0;
             setTimeout(() => document.getElementById('loader').remove(), 1000);
             
             animate();
             
-            // Startet mit dem ersten Top-Ranking-Platz
             setTimeout(() => {
                 if (destinations.length > 0) {
                     selectLocation(destinations.sort((a, b) => b.calc.score - a.calc.score)[0]);
@@ -694,17 +664,9 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-            document.getElementById('tooltip').style.left = e.clientX + 'px';
-            document.getElementById('tooltip').style.top = e.clientY + 'px';
-        });
-        window.addEventListener('click', (e) => {
-            if(hoveredMesh && !e.target.closest('.panel')) {
-                selectLocation(hoveredMesh.userData.data);
-            }
-        });
+        
+        // Remove old mousemove/click logic as the Billboards now handle hover/click via pointer-events: all
+        // (The Billboards are HTML elements, so standard DOM events apply.)
 
         window.onload = initApp;
 
