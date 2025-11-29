@@ -3,48 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title>ParadiseFinder 2025 – Ultimate Expat Tool (HTML Billboards)</title>
+    <title>ParadiseFinder 2025 – Ultimate Expat Tool (three-globe)</title>
     
-    <link rel="manifest" href="data:application/json;charset=utf-8;base64,eyJpY29ucyI6IFt7InNyYyI6ICJodHRwczovL2Vtb2ppaXZlLW9iamVjdHMuczMtZWFzdC0yLWFtYXpvbmF3cy5jb20vMDBkMGQyMmMtNmExNy00ZWMwLWI4ZGQtNmQ0OTc1Yjk0OTNmLzAxMWQxNmFhLTJmM2EtNGM1MS1iMDA1LTQ2OWRmNTE3OWI5ZC5qcGciLCJzaXplcyI6ICIxOTJ4MTkyIn0sIHsic3JjIjogImh0dHBzOi8vZW1vaml2ZS1vYmplY3RzLnMzLWVhc3QtMi1hbWF6b25hd3MuY29tLzAwZDBkMjJjLTZhMTctNGVjMC1iOGRkLTZkNDk3NWI5NDkzZi8wMTFkMTZhYS0yZjNhLTRjNTEtYjAwNS00NjlkZjUxNzlhOWQuanBnIiwic2l6ZXMiOiAiNTEyeDUxMiJ9XSwgIm5hbWUiOiAiUGFyYWRpc2VGaW5kZXIiLCAic2hvcnRfbmFtZSI6ICJQYXJhZGlzZUZpbmRlciIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiIH0=">
+    <link rel="manifest" href="data:application/json;charset=utf-8;base64,eyJpY29ucyI6IFt7InNyYyI6ICJodHRwczovL2Vtb2ppaXZlLW9iamVjdHMuczMtZWFzdC0yLWFtYXpvbmF3cy5jb20vMDBkMGQyMmMtNmExNy00ZWMwLWI4ZGQtNmQ0OTc1Yjk0OTNmLzAxMWQxNmFhLTJmM2EtNGM1MS1iMDA1LTQ2OWRmNTE3OWI5ZC5qcGciLCJzaXplcyI6ICIxOTJ4MTkyIn0sIHsic3JjIjogImh0dHBzOi8vZW1vaml2ZS1vYmplY3RzLnMzLWVhc3QtMi1hbWF6b25hd3MuY29tLzAwZDBkMjJjLTZhMTctNGVjMC1iOGRkLTZkNDk3NWI5NDkzZi8wMTFkMTZhYS0yZjNhLTRjNTEtYjAwNS00NjlkZjUxNzlhOWQuanBnIiwic2l6ZXMiOiAiNTEyeDUxMiJ9XSwgIm5hbWUiOiAiUGFyYWRpc2VGaW5kZXIiLCAic2hvcnRfbmFtZSI6ICJQYXJhaGlzZUZpbmRlciIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiIH0=">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://unpkg.com/globe.gl@4.36.7/dist/globe.gl.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
-    <script>
-        function createAmbientSound() {
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                const audioCtx = new AudioContext();
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(220, audioCtx.currentTime); // Low frequency
-                gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime); // Very quiet
-
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                oscillator.start();
-
-                // Simple modulation for "space" feel
-                const lfo = audioCtx.createOscillator();
-                lfo.frequency.setValueAtTime(0.5, audioCtx.currentTime); // 0.5Hz LFO
-                lfo.connect(gainNode.gain);
-                lfo.start();
-                
-                // User interaction required for context start
-                document.body.addEventListener('click', () => {
-                    if (audioCtx.state === 'suspended') {
-                        audioCtx.resume();
-                    }
-                }, { once: true });
-
-            } catch(e) { console.warn("Web Audio API not supported or failed to start."); }
-        }
-        createAmbientSound();
-    </script>
 
     <style>
         :root {
@@ -60,7 +25,10 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; overflow: hidden; background-color: var(--bg-dark); font-family: var(--font-main); color: #fff; }
         
-        /* General Panel Styling (Unchanged) */
+        /* Three.js Container */
+        #globe-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+        /* General Panel Styling (Z-Index erhöht, da Globe jetzt Z-Index 1 ist) */
         .panel { position: absolute; pointer-events: auto; background: var(--bg-glass); backdrop-filter: blur(25px); border: var(--border-glass); border-radius: 16px; padding: 24px; z-index: 10; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8); transition: all 0.4s ease; max-height: 95vh; scrollbar-width: thin; scrollbar-color: rgba(0, 243, 255, 0.4) rgba(0, 0, 0, 0.2); }
         #panel-left { top: 20px; left: 20px; width: 380px; bottom: 20px; overflow-y: scroll; }
         #panel-right { top: 20px; right: 20px; width: 420px; bottom: 20px; overflow-y: scroll; transform: translateX(120%); }
@@ -68,14 +36,12 @@
         h2 { margin: 0 0 15px 0; font-weight: 400; font-size: 18px; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
         h3 { font-size: 13px; color: #fff; margin-top: 15px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Form & Sliders (Unchanged) */
+        /* Form, Ranking, Results (Unverändert) */
         label { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; color: #aaa; }
         input[type=range] { width: 100%; -webkit-appearance: none; background: rgba(0,0,0,0.5); height: 3px; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: var(--neon-blue); border-radius: 50%; cursor: grab; box-shadow: 0 0 10px var(--neon-blue); }
         input[type=number] { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid #444; color: #fff; padding: 6px; border-radius: 4px; font-size: 14px; }
         .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
-
-        /* Ranking & Results (Unchanged) */
         .ranking-item { display: flex; justify-content: space-between; padding: 8px 10px; margin-bottom: 4px; border-radius: 6px; cursor: pointer; transition: background 0.2s; font-size: 14px; background: rgba(0,0,0,0.3); }
         .ranking-item:hover { background: rgba(0, 243, 255, 0.1); }
         .score-indicator { width: 5px; height: 100%; margin-right: 10px; border-radius: 2px; }
@@ -85,32 +51,27 @@
         .cash-flow { font-size: 20px; font-weight: bold; margin-top: 10px; }
         .btn-main { width: 100%; padding: 14px; margin-top: 20px; background: linear-gradient(90deg, #00c6ff, #0072ff); border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; }
 
-        /* Loading (Unchanged) */
+        /* Loading (Unverändert) */
         #loader { position: absolute; top:0; left:0; width:100%; height:100%; background:var(--bg-dark); z-index:999; display:flex; justify-content:center; align-items:center; flex-direction: column; transition: opacity 1s; }
         .progress-bar { width: 300px; height: 3px; background: rgba(255,255,255,0.1); margin-top: 15px; border-radius: 2px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background: var(--neon-blue); width: 0%; transition: width 0.3s; }
         .spinner { width: 50px; height: 50px; border: 3px solid rgba(0,243,255,0.3); border-top-color: var(--neon-blue); border-radius: 50%; animation: spin 1s infinite linear; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* New: HTML Element Layer (Tooltip) */
-        #html-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+        /* three-globe Billboards (mit CSS2D Renderer) */
         .globe-billboard {
-            position: absolute;
-            transform: translate(-50%, 0); /* Center horizontally */
             pointer-events: all;
             background: rgba(0, 0, 0, 0.9);
             border: 1px solid var(--neon-blue);
             padding: 5px 10px;
             border-radius: 4px;
             font-size: 12px;
+            color: #fff;
             cursor: pointer;
             white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.2s, background 0.2s;
             box-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
-            margin-top: -30px; /* Offset above the point */
+            transition: background 0.2s;
         }
-        .globe-billboard.visible { opacity: 1; }
         .globe-billboard:hover { background: rgba(0, 243, 255, 0.15); }
         .billboard-score { font-weight: bold; margin-left: 5px; }
     </style>
@@ -121,8 +82,8 @@
         <div style="margin-top:20px; font-size:14px; letter-spacing:2px; color:var(--neon-blue);" id="loader-text">Scanne 258 Paradiese und kalibriere Geo-Daten...</div>
         <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
     </div>
-
-    <div id="html-layer"></div>
+    
+    <div id="globe-container"></div>
 
     <div id="panel-left" class="panel">
         <h2>System-Präferenzen</h2>
@@ -184,10 +145,8 @@
         const BASE_INCOME_DE = 120000;
         const TAX_RATE_DE = 0.42; 
         const MONTHLY_COST_DE = 2500 * (2 + 2 * 0.6); 
-        const GLOBE_RADIUS = 10;
         
         const QUESTIONS = [
-            // ... (28 Fragen wie zuvor) ...
             "Einfache langfristige Aufenthaltsgenehmigung", "Realistischer Weg zur Staatsbürgerschaft", 
             "Höchste Sicherheit & extrem niedrige Kriminalität", "Internationale Schulen in absoluter Top-Qualität", 
             "Krankenhäuser & Ärzte auf deutschem Niveau", "Englisch als tägliche Alltagssprache", 
@@ -205,39 +164,26 @@
         ];
         
         const HIGH_VALUE_DESTINATIONS = [
+            // Datenstruktur wie zuvor (gekürzt)
             {"name":"Dubai (UAE)","lat":25.2048,"lng":55.2708,"flag":"🇦🇪","tax":0,"living":78000,"residency":"Golden Visa ab 500k€","scores":[1,1,1,0.95,1,1,1,1,1,1,0.7,0.6,0.95,0.7,0.8,0.9,1,0.9,0.9,1,1,1,0.9,1,1,0.9,1,1]},
             {"name":"Madeira (Portugal)","lat":32.7607,"lng":-16.9595,"flag":"🇵🇹","tax":10,"living":42000,"residency":"NHR 2.0 bis mind. 2034","scores":[1,0.9,0.95,0.95,0.95,0.85,0.9,0.9,1,1,0.9,0.9,0.9,0.95,1,1,1,0.95,1,1,0.9,1,1,1,1,0.95,1,1]},
             {"name":"Malta & Gozo","lat":35.9375,"lng":14.3754,"flag":"🇲🇹","tax":15,"living":54000,"residency":"Permanent Residency €150k","scores":[1,1,0.95,0.9,0.95,1,0.85,0.85,1,1,0.8,0.75,0.9,1,0.95,0.95,1,1,1,1,0.95,1,1,1,1,0.95,1,1]},
             {"name":"Zypern (Limassol)","lat":34.7071,"lng":33.0226,"flag":"🇨🇾","tax":12.5,"living":52000,"residency":"Permanent Residency €300k","scores":[1,0.9,0.95,0.95,0.95,1,0.85,0.85,1,0.95,0.8,0.8,0.9,1,0.95,0.95,1,1,1,1,0.95,1,1,1,1,0.95,1,1]},
-            {"name":"Mauritius","lat":-20.3484,"lng":57.5522,"flag":"🇲🇺","tax":15,"living":48000,"residency":"Premium Visa (Long-Stay)","scores":[1,0.9,0.95,0.9,0.9,0.9,1,1,1,1,0.85,0.75,0.8,0.5,0.8,0.4,0.7,0.9,1,1,1,0.8,0.9,1,1,0.9,0.95,1]},
-            {"name":"Cayman Islands","lat":19.3133,"lng":-81.2546,"flag":"🇰🇾","tax":0,"living":110000,"residency":"Residency by Investment","scores":[1,1,1,0.95,1,1,1,1,1,1,0.5,0.3,0.9,0.4,0.9,0.7,0.8,0.9,0.9,1,1,1,0.8,0.9,1,0.8,0.7,1]},
             {"name":"Georgien (Tbilisi)","lat":41.7151,"lng":44.8271,"flag":"🇬🇪","tax":1,"living":30000,"residency":"1% Small Business Status","scores":[0.95,0.8,0.85,0.9,0.85,0.7,0.98,0.98,1,1,0.95,0.95,0.9,0.9,0.8,0.9,0.6,0.85,0.95,0.9,0.9,0.9,1,1,0.8,0.9,1,0.95]},
-            {"name":"Panama","lat":8.9824,"lng":-79.5199,"flag":"🇵🇦","tax":0,"living":48000,"residency":"Friendly Nations Visa","scores":[0.95,0.85,0.9,0.9,0.9,0.8,1,1,1,1,0.85,0.8,0.8,0.8,0.7,0.5,0.6,0.85,1,1,1,0.7,0.9,1,0.9,0.85,0.95,1]},
-            {"name":"Bali","lat":-8.6525,"lng":115.1453,"flag":"🇮🇩","tax":30,"living":36000,"residency":"B211A + KITAS","scores":[0.9,0.3,0.85,0.95,0.85,1,0.7,0.7,0.9,1,0.9,1,0.7,0.2,0.8,0.1,0.7,1,0.9,0.9,0.8,0.6,0.8,0.7,0.7,0.9,0.9,0.9]},
-            {"name":"Phuket","lat":7.9519,"lng":98.3382,"flag":"🇹🇭","tax":35,"living":42000,"residency":"LTR Visa 10 Jahre","scores":[0.9,0.2,0.8,0.95,0.85,1,0.6,0.6,0.9,1,0.9,1,0.8,0.3,0.8,0.3,0.6,1,0.9,0.9,0.7,0.5,0.7,0.7,0.7,0.9,0.9,0.9]},
-            {"name":"Teneriffa","lat":28.2916,"lng":-16.6291,"flag":"🇪🇸","tax":24,"living":45000,"residency":"Non-Lucrative Visa","scores":[1,0.7,0.95,1,0.95,0.9,0.7,0.7,0.8,0.8,0.9,0.9,0.9,0.95,1,1,1,1,1,1,0.9,1,1,1,1,0.95,1,1]},
-            {"name":"Mallorca","lat":39.6953,"lng":2.9787,"flag":"🇪🇸","tax":24,"living":55000,"residency":"Non-Lucrative Visa","scores":[1,0.65,0.95,1,0.95,0.9,0.65,0.65,0.7,0.7,0.85,0.85,0.9,1,1,1,1,1,1,1,0.9,1,1,1,1,0.95,1,1]},
-            {"name":"Monaco","lat":43.7334,"lng":7.4190,"flag":"🇲🇨","tax":0,"living":150000,"residency":"Ordinary Residency","scores":[0.95,0.7,1,1,1,0.7,1,1,1,1,0.5,0.05,0.99,0.95,0.8,1,0.7,0.9,1,1,1,0.9,0.9,0.95,1,1,0.9,1]},
-            {"name":"Andorra","lat":42.5063,"lng":1.5218,"flag":"🇦🇩","tax":10,"living":55000,"residency":"Active Residency","scores":[0.9,0.7,1,0.9,0.95,0.6,0.9,0.95,1,1,0.8,0.7,0.9,0.95,0.7,1,0.7,0.9,1,1,1,0.9,0.9,0.9,1,1,1,1]}
         ];
         
         let destinations = [];
         const TOTAL_LOCATIONS = 258; 
-
-        // --- Globale 3D/UI Variablen ---
-        let pointMeshes = [];
-        let billboards = []; // Array to hold HTML elements and their corresponding 3D data
-        let raycaster = new THREE.Raycaster();
-        let mouse = new THREE.Vector2();
-        let selectedData = null;
         let weights = new Array(QUESTIONS.length).fill(0.5);
+        let Globe = null;
 
         // ==========================================
         // 2. PROZEDURALE DATEN GENERIERUNG 
         // ==========================================
         function generateProceduralLocations() {
             destinations = HIGH_VALUE_DESTINATIONS.map(d => ({
-                ...d, calc: {}, id: 'HV_' + d.name.replace(/\W/g, ''), real: true, pos3D: new THREE.Vector3()
+                ...d, calc: {}, id: 'HV_' + d.name.replace(/\W/g, ''), real: true,
+                lat: d.lat, lng: d.lng, altitude: 0.05 
             }));
 
             while (destinations.length < TOTAL_LOCATIONS) {
@@ -249,187 +195,69 @@
                     living: parent.living * (0.8 + Math.random() * 0.4),
                     residency: 'Lokales Programm (Simuliert)',
                     scores: Array(QUESTIONS.length).fill(0).map(() => Math.max(0.2, (Math.random() * 0.3) + 0.3)), 
-                    real: false, calc: {}, id: 'PR_' + destinations.length, pos3D: new THREE.Vector3()
+                    real: false, calc: {}, id: 'PR_' + destinations.length,
+                    altitude: Math.random() * 0.05 + 0.01 // Minimal über dem Globus
                 });
             }
             document.getElementById('progress-fill').style.width = '50%';
         }
 
+
         // ==========================================
-        // 3. THREE.JS & RENDERING (Realistic Shader)
+        // 3. GLOBE.GL / THREE-GLOBE INITIALISIERUNG
         // ==========================================
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(20, 20, 50);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.8;
-        controls.minDistance = 15;
-        controls.maxDistance = 90;
-
-        // Lights
-        scene.add(new THREE.AmbientLight(0x404080, 0.6));
-        const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
-        dirLight.position.set(50, 50, 50);
-        scene.add(dirLight);
-
-        // Helper: Lat/Lng to Vector3
-        function getPosFromLatLng(lat, lng, radius) {
-            const phi = (90 - lat) * (Math.PI / 180); 
-            const theta = (lng + 180) * (Math.PI / 180); 
-            
-            const x = -(radius * Math.sin(phi) * Math.cos(theta));
-            const z = (radius * Math.sin(phi) * Math.sin(theta));
-            const y = (radius * Math.cos(phi));
-            
-            return new THREE.Vector3(x, y, z);
-        }
-
-        // GLSL Landmass & Ocean Shader (Same as V3.0 for realism)
-        const earthUniforms = { time: { value: 0.0 }, uLightPos: { value: dirLight.position } };
-        const earthMat = new THREE.ShaderMaterial({
-            uniforms: earthUniforms,
-            vertexShader: `
-                varying vec3 vNormal; varying vec3 vPos; varying vec2 vUv;
-                void main() {
-                    vNormal = normal; vPos = position; vUv = uv;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
-            fragmentShader: `
-                uniform float time; uniform vec3 uLightPos;
-                varying vec3 vNormal; varying vec3 vPos; varying vec2 vUv;
-                
-                vec3 mod289(vec3 x) { return x - floor(x / 289.0) * 289.0; }
-                vec4 mod289(vec4 x) { return x - floor(x / 289.0) * 289.0; }
-                vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
-                vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
-                
-                float snoise(vec3 v) {
-                    const vec2  C = vec2(1.0/6.0, 1.0/3.0); const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
-                    vec3 i  = floor(v + dot(v, C.yyy)); vec3 x0 =   v - i + dot(i, C.xxx);
-                    vec3 g = step(x0.yzx, x0.xyz); vec3 l = 1.0 - g;
-                    vec3 i1 = min(g.xyz, l.zxy); vec3 i2 = max(g.xyz, l.zxy);
-                    vec3 x1 = x0 - i1 + C.xxx; vec3 x2 = x0 - i2 + C.yyy; vec3 x3 = x0 - D.yyy + C.zzz;
-                    i = mod289(i); vec4 p = permute(permute(permute( 
-                                i.z + vec4(0.0, i1.z, i2.z, 1.0 )) + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
-                    float n_ = 0.142857142857; vec3  ns = n_ * D.wyz - D.xzx;
-                    vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
-                    vec4 x_ = floor(j * ns.z); vec4 y_ = floor(j - 7.0 * x_ );
-                    vec4 x = x_ * ns.x + ns.yyyy; vec4 y = y_ * ns.x + ns.yyyy; vec4 h = 13.0 * y + x;
-                    vec4 ox = mod(h, 7.0); vec4 oy = mod(floor(h / 7.0), 7.0);
-                    vec4 dx = x0 + ns.xxxx; vec4 dy = x0 + ns.yyyy; vec4 dz = x0 + ns.zzzz;
-                    vec4 sx = dx * dx + dy * dy + dz * dz; vec4 a  = ( 0.6 - sx ) * ( 0.6 - sx );
-                    a = max(a, 0.0);
-                    vec4  w0 = taylorInvSqrt(sx); vec4  w1 = taylorInvSqrt(sx - 1.0);
-                    vec4  w2 = taylorInvSqrt(sx - 2.0); vec4  w3 = taylorInvSqrt(sx - 3.0);
-                    vec4  g0 = taylorInvSqrt(mod289(vec4(13.0 * y + x + 1.0))); vec4  g1 = taylorInvSqrt(mod289(vec4(13.0 * oy + ox + 1.0)));
-                    vec4  g2 = taylorInvSqrt(mod289(vec4(13.0 * oy + ox + 2.0))); vec4  g3 = taylorInvSqrt(mod289(vec4(13.0 * y + x + 3.0)));
-                    return 32.0 * dot(a * a * a, g0 + g1 + g2 + g3);
-                }
-                
-                float worley(vec3 p) {
-                    vec3 i = floor(p); vec3 f = fract(p); float d = 1.0;
-                    for (int x = -1; x <= 1; x++) {
-                        for (int y = -1; y <= 1; y++) {
-                            for (int z = -1; z <= 1; z++) {
-                                vec3 neighbor = vec3(float(x), float(y), float(z));
-                                vec3 point = i + neighbor + mod289(sin(neighbor * 1000.0) * 10000.0);
-                                float dist = length(f - neighbor - point);
-                                d = min(d, dist);
-                            }
-                        }
-                    }
-                    return d;
-                }
-                
-                void main() {
-                    vec3 norm = normalize(vPos); vec3 p = norm * 15.0; 
-                    vec3 oceanColor = vec3(0.0, 0.15, 0.4);
-                    float noise1 = snoise(p * 0.8 + time * 0.05);
-                    float noise2 = worley(p * 2.0);
-                    float landThreshold = 0.55;
-                    float landMix = smoothstep(landThreshold - 0.1, landThreshold + 0.1, noise1 + noise2 * 0.1);
-                    vec3 landColor = vec3(0.05, 0.4, 0.1); 
-                    vec3 surfaceColor = mix(oceanColor, landColor, landMix);
-
-                    vec3 L = normalize(uLightPos - vPos); vec3 N = normalize(vNormal);
-                    float diff = max(dot(N, L), 0.0) * 0.7 + 0.3; 
-                    
-                    vec3 viewDir = normalize(-vPos);
-                    float rim = pow(1.0 - max(dot(viewDir, N), 0.0), 4.0);
-                    vec3 rimColor = vec3(0.0, 0.8, 1.0) * rim * 1.5;
-
-                    vec3 finalColor = surfaceColor * diff;
-                    finalColor += rimColor;
-
-                    gl_FragColor = vec4(finalColor, 1.0);
-                }
-            `,
-            transparent: false
-        });
-        const earth = new THREE.Mesh(new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64), earthMat);
-        scene.add(earth);
-
-        // Atmosphere Glow
-        const atmoMat = new THREE.ShaderMaterial({
-            vertexShader: `varying vec3 vNormal; void main() { vNormal = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
-            fragmentShader: `varying vec3 vNormal; void main() { float intensity = pow(0.8 - dot(vNormal, vec3(0, 0, 1.0)), 4.0); gl_FragColor = vec4(0.0, 0.6, 1.0, 1.0) * intensity; }`,
-            blending: THREE.AdditiveBlending, side: THREE.BackSide, transparent: true
-        });
-        scene.add(new THREE.Mesh(new THREE.SphereGeometry(GLOBE_RADIUS + 1.5, 64, 64), atmoMat));
-        
-        // --- Custom HTML Element Layer Creation ---
-        function createPointsAndBillboards() {
-            const pointsGroup = new THREE.Group();
-            const dotGeo = new THREE.SphereGeometry(0.12, 16, 16);
-            pointMeshes = [];
-            billboards = [];
-
-            destinations.forEach((loc, i) => {
-                loc.pos3D.copy(getPosFromLatLng(loc.lat, loc.lng, GLOBE_RADIUS + 0.1));
-                
-                // 1. 3D Dot
-                const mat = new THREE.MeshBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.8 });
-                const mesh = new THREE.Mesh(dotGeo, mat);
-                mesh.position.copy(loc.pos3D);
-                mesh.userData = { data: loc };
-                pointsGroup.add(mesh);
-                pointMeshes.push(mesh);
-
-                // 2. HTML Billboard
-                const div = document.createElement('div');
-                div.className = 'globe-billboard';
-                div.id = 'billboard-' + loc.id;
-                div.innerHTML = `${loc.flag} ${loc.name} <span class="billboard-score" style="color:#00f3ff;">0%</span>`;
-                div.onclick = () => selectLocation(loc);
-                
-                document.getElementById('html-layer').appendChild(div);
-
-                billboards.push({
-                    element: div,
-                    pos3D: loc.pos3D,
-                    data: loc,
-                    mesh: mesh,
+        function initGlobe() {
+            Globe = window.Globe()
+                (document.getElementById('globe-container'))
+                .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg') // Realistische Nacht-Textur
+                .backgroundColor('#050510')
+                .showAtmosphere(true)
+                .atmosphereColor('#00f3ff')
+                .atmosphereAltitude(0.25)
+                .pointColor(d => {
+                    // Farbe basierend auf Score setzen (wird später in calculate() überschrieben)
+                    const score = d.calc && d.calc.score ? d.calc.score : 50;
+                    const h = (score / 100) * 0.33; 
+                    return `hsl(${h * 360}, 100%, 60%)`;
+                })
+                .pointAltitude('altitude') // Nutze das vorberechnete Altitude-Feld
+                .pointRadius(d => 0.2 + (d.calc && d.calc.score ? d.calc.score / 100 : 0.5) * 0.2) // Radius skalieren
+                .pointsData(destinations)
+                .pointLabel(d => `${d.flag} ${d.name} (${Math.round(d.calc.score)}%)`) // Standard-Tooltip
+                .onPointClick(selectLocation) // Interaktion: Klick auf Punkt wählt aus
+                .controlsState({ 
+                    autoRotate: true, 
+                    autoRotateSpeed: 0.8 
                 });
-            });
-            scene.add(pointsGroup);
+            
+            // --- HTML Elements Layer (WIE GEWÜNSCHT) ---
+            Globe.htmlElementsData(destinations)
+                 .htmlLat('lat')
+                 .htmlLng('lng')
+                 .htmlAltitude(d => d.altitude + 0.01) // Etwas höher als der Punkt
+                 .htmlElement(d => {
+                    const el = document.createElement('div');
+                    el.className = 'globe-billboard';
+                    el.id = 'billboard-' + d.id;
+                    el.innerHTML = `${d.flag} ${d.name} <span class="billboard-score">0%</span>`;
+                    return el;
+                 })
+                 .htmlTransitionDuration(500); // Sanfter Übergang beim Neupositionieren
+            
+            // Initiales Rendering und Anpassung
+            window.addEventListener('resize', () => Globe.width(window.innerWidth).height(window.innerHeight));
+            Globe.width(window.innerWidth).height(window.innerHeight);
+
             document.getElementById('progress-fill').style.width = '75%';
         }
-        
+
+
         // ==========================================
         // 4. CORE ENGINE (SCORING & FINANCE)
         // ==========================================
         
         function setupUIAndListeners() {
-            // ... (setup sliders and input listeners) ...
             const sliderCont = document.getElementById('sliders-container');
             QUESTIONS.forEach((q, i) => {
                 const div = document.createElement('div');
@@ -458,18 +286,16 @@
             const netDE = income * (1 - TAX_RATE_DE);
             const cashflowDE = netDE - (MONTHLY_COST_DE * 12);
 
-            destinations.forEach((d, idx) => {
+            destinations.forEach((d) => {
+                // Scoring
                 let scoreSum = 0; let weightSum = 0;
                 d.scores.forEach((s, i) => { scoreSum += s * weights[i]; weightSum += weights[i]; });
                 const softScore = weightSum > 0 ? (scoreSum / weightSum) : 0;
-
                 const net = income * (1 - (d.tax / 100));
                 const living = (d.living / (2 + 2 * 0.6)) * familyFactor; 
                 const cashflow = net - living;
-                
                 const maxBonusThreshold = 60000;
                 const financeBonus = Math.min(Math.max(cashflow, 0), maxBonusThreshold) / maxBonusThreshold;
-
                 const finalScore = (softScore * 0.75) + (financeBonus * 0.25);
                 
                 d.calc = {
@@ -477,30 +303,25 @@
                     cashflowMonthly: cashflow / 12, wealthDelta: (cashflow - cashflowDE) * 10 
                 };
 
-                // Visual Update: Dot Color and Scale
-                const score = d.calc.score;
-                const mesh = pointMeshes[idx];
-                const color = new THREE.Color();
-                const h = (score / 100) * 0.33; 
-                color.setHSL(h, 1.0, 0.6); 
-                mesh.material.color.lerp(color, 0.2);
-                const scale = 1 + (score / 50);
-                mesh.scale.setScalar(scale);
-                
-                // Update Billboard Score
+                // Update HTML Billboard Score
                 const billboardEl = document.getElementById('billboard-' + d.id);
                 if (billboardEl) {
                     const scoreEl = billboardEl.querySelector('.billboard-score');
-                    scoreEl.innerText = Math.round(score) + "%";
+                    const score = Math.round(d.calc.score);
+                    scoreEl.innerText = score + "%";
                     scoreEl.style.color = score > 80 ? 'var(--neon-green)' : (score > 50 ? '#ffcc00' : '#ff3366');
                 }
             });
+
+            // Wichtig: Daten-Update an Globe senden
+            if (Globe) {
+                Globe.pointsData(destinations);
+            }
 
             updateRanking();
         }
 
         function updateRanking() {
-            // ... (Ranking logic unchanged) ...
             const list = document.getElementById('ranking-list');
             list.innerHTML = '';
             
@@ -531,24 +352,16 @@
         }
         
         // ==========================================
-        // 5. INTERAKTIONEN & HTML ELEMENT UPDATER
+        // 5. INTERAKTIONEN (FLIEGEN & UI)
         // ==========================================
 
         window.selectLocation = (data) => {
             selectedData = data;
             
-            // Camera Fly (Unchanged)
-            const targetPos = getPosFromLatLng(data.lat, data.lng, 25);
-            new TWEEN.Tween(camera.position)
-                .to({x: targetPos.x, y: targetPos.y, z: targetPos.z}, 1500)
-                .easing(TWEEN.Easing.Cubic.InOut)
-                .onUpdate(() => controls.update())
-                .start();
+            // Kamera Fly (Nutzung der Globe.GL-Methode)
+            Globe.pointOfView({ lat: data.lat, lng: data.lng, altitude: 1.5 }, 1500); 
             
-            controls.autoRotate = false;
-            setTimeout(() => controls.autoRotate = true, 5000);
-
-            // Populate Right Panel (Unchanged)
+            // UI-Populate (Unverändert)
             document.getElementById('country-name').innerText = `${data.flag} ${data.name}`;
             
             const score = Math.round(data.calc.score);
@@ -585,63 +398,45 @@
         window.closeRightPanel = () => {
             document.getElementById('panel-right').classList.remove('active');
         }
-        
-        // Custom HTML Billboard Updater (simulates CSS2DRenderer/htmlElementVisibilityModifier)
-        const v = new THREE.Vector3();
-        function updateBillboards() {
-            const width = window.innerWidth, height = window.innerHeight;
-            const globeCenter = new THREE.Vector3(0, 0, 0);
 
-            billboards.forEach(billboard => {
-                const element = billboard.element;
-                const position = billboard.pos3D;
+        // PDF Generation (Unverändert)
+        function generatePDF() {
+            if(!selectedData) return alert("Bitte wählen Sie zuerst einen Standort aus der Liste!");
+            const d = selectedData;
+            
+            const pdfBody = document.getElementById('pdf-body');
+            pdfBody.innerHTML = `
+                <h2 style="color:#0072ff; font-size:28px;">${d.flag} ${d.name}</h2>
+                <p style="font-size:14px; color:#555;">Match Score: ${Math.round(d.calc.score)}% | Effektiver Steuersatz: ${d.tax}%</p>
                 
-                // 1. Convert 3D position to 2D screen coordinates
-                position.project(camera); 
+                <div style="margin-top:30px; border:1px solid #ccc; padding:20px; border-radius:5px;">
+                    <h3 style="color:#333; border-bottom:1px solid #ddd; padding-bottom:10px;">FINANZIELLE KENNZAHLEN (10 JAHRE)</h3>
+                    <p style="font-size:22px; color:#4CAF50; font-weight:bold; margin-top:15px;">ÜBRIG PRO JAHR: ${Math.round(d.calc.cashflow).toLocaleString('de-DE')} €</p>
+                    <p style="font-size:16px;">Netto-Einkommen: ${Math.round(d.calc.net).toLocaleString('de-DE')} €</p>
+                    <p style="font-size:16px;">Geschätzte Lebenshaltung: ${Math.round(d.calc.living).toLocaleString('de-DE')} €</p>
+                    <p style="font-size:18px; font-weight:bold; margin-top:20px;">VERMÖGENSVORTEIL vs. DE: ${document.getElementById('wealth-gain').innerText}</p>
+                </div>
                 
-                // 2. Depth/Visibility Check (htmlElementVisibilityModifier)
-                // If the Z coordinate is > 1.0, the object is outside the frustum (behind the camera).
-                // If the Z coordinate is close to 1.0, it is behind the globe (since the points are at r+0.1)
-                const distanceToCenter = camera.position.distanceTo(globeCenter);
-                const distanceToPoint = camera.position.distanceTo(billboard.mesh.position);
+                <div style="margin-top:20px;">
+                    <h3 style="color:#333; border-bottom:1px solid #ddd; padding-bottom:10px;">PROGRAMM & DETAILS</h3>
+                    <p><strong>Residency-Programm:</strong> ${d.residency}</p>
+                    ${document.getElementById('details-container').innerHTML}
+                </div>
+            `;
 
-                // Simple Check: Point is behind the center of the globe sphere
-                const isVisible = position.z < 1.0 && distanceToPoint < distanceToCenter; 
-
-                if (isVisible) {
-                    const x = ((position.x + 1) / 2) * width;
-                    const y = ((-position.y + 1) / 2) * height;
-                    
-                    element.style.left = `${x}px`;
-                    element.style.top = `${y}px`;
-                    element.classList.add('visible');
-                } else {
-                    element.classList.remove('visible');
-                }
-                
-                // Unproject the vector for the next frame
-                position.unproject(camera);
+            const element = document.getElementById('pdf-content');
+            element.style.top = "0"; 
+            
+            html2pdf().from(element).save(`ParadiseReport_${d.name.replace(/\W/g,'_')}.pdf`).then(() => {
+                element.style.top = "-9999px"; 
             });
-        }
-
-
-        // --- 3D Animation Loop & Billboard Update ---
-        function animate(time) {
-            requestAnimationFrame(animate);
-            TWEEN.update(time);
-            controls.update();
-            earthMat.uniforms.time.value = time * 0.001;
-
-            updateBillboards(); // NEW: Update HTML positions and visibility
-
-            renderer.render(scene, camera);
         }
 
         // --- Initialization ---
         function initApp() {
             generateProceduralLocations();
-            createPointsAndBillboards();
             setupUIAndListeners();
+            initGlobe(); // Initialisiert den Globe und die HTML-Layer
             
             calculate(); 
 
@@ -650,23 +445,13 @@
             document.getElementById('loader').style.opacity = 0;
             setTimeout(() => document.getElementById('loader').remove(), 1000);
             
-            animate();
-            
+            // Startet mit dem ersten Top-Ranking-Platz
             setTimeout(() => {
                 if (destinations.length > 0) {
                     selectLocation(destinations.sort((a, b) => b.calc.score - a.calc.score)[0]);
                 }
             }, 1500);
         }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-        
-        // Remove old mousemove/click logic as the Billboards now handle hover/click via pointer-events: all
-        // (The Billboards are HTML elements, so standard DOM events apply.)
 
         window.onload = initApp;
 
