@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title>ParadiseFinder 2025 – Ultimate Expat Tool</title>
+    <title>ParadiseFinder 2025 – Ultimate Expat Tool (Realism)</title>
     
-    <link rel="manifest" href="data:application/json;charset=utf-8;base64,eyJpY29ucyI6IFt7InNyYyI6ICJodHRwczovL2Vtb2ppdmUtb2JqZWN0cy5zMy1lYXN0LTItYW1hem9uYXdzLmNvbS8wMGQwZDIyYy02YTE3LTRlYzAtYjhkZC02ZDQ5NzViOTQ5M2YvMDExZDE2YWEtMmYzYS00YzUxLWIwMDUtNDY5ZGY1MTc5YjlkLmpwZyIsInNpemVzIjogIjE5MngxOTIifSwgeyJzcmMiOiAiaHR0cHM6Ly9lbW9qaXZlLW9iamVjdHMuczMtZWFzdC0yLWFtYXpvbmF3cy5jb20vMDBkMGQyMmMtNmExNy00ZWMwLWI4ZGQtNmQ0OTc1Yjk0OTNmLzAxMWQxNmFhLTJmM2EtNGM1MS1iMDA1LTQ2OWRmNTE3OWI5ZC5qcGciLCJzaXplcyI6ICI1MTJ4NTEyIn1dLCAibmFtZSI6ICJQYXJhZGlzZUZpbmRlciIsICJzaG9ydF9uYW1lIjogIlBhcmFkaXNlRmluZGVyIiwgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIgfQ==">
+    <link rel="manifest" href="data:application/json;charset=utf-8;base64,eyJpY29ucyI6IFt7InNyYyI6ICJodHRwczovL2Vtb2ppaXZlLW9iamVjdHMuczMtZWFzdC0yLWFtYXpvbmF3cy5jb20vMDBkMGQyMmMtNmExNy00ZWMwLWI4ZGQtNmQ0OTc1Yjk0OTNmLzAxMWQxNmFhLTJmM2EtNGM1MS1iMDA1LTQ2OWRmNTE3OWI5ZC5qcGciLCJzaXplcyI6ICIxOTJ4MTkyIn0sIHsic3JjIjogImh0dHBzOi8vZW1vaml2ZS1vYmplY3RzLnMzLWVhc3QtMi1hbWF6b25hd3MuY29tLzAwZDBkMjJjLTZhMTctNGVjMC1iOGRkLTZkNDk3NWI5NDkzZi8wMTFkMTZhYS0yZjNhLTRjNTEtYjAwNS00NjlkZjUxNzlhOWQuanBnIiwic2l6ZXMiOiAiNTEyeDUxMiJ9XSwgIm5hbWUiOiAiUGFyYWRpc2VGaW5kZXIiLCAic2hvcnRfbmFtZSI6ICJQYXJhZGlzZUZpbmRlciIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiIH0=">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -17,11 +17,12 @@
             --neon-blue: #00f3ff;
             --neon-green: #0aff68;
             --bg-dark: #050510;
-            --bg-glass: rgba(10, 15, 30, 0.75);
+            --bg-glass: rgba(10, 15, 30, 0.85); /* Slightly darker/more opaque glass */
             --border-glass: 1px solid rgba(0, 243, 255, 0.2);
             --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
+        /* Reset and Base */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; overflow: hidden; background-color: var(--bg-dark); font-family: var(--font-main); color: #fff; }
 
@@ -33,11 +34,13 @@
             padding: 24px; z-index: 10;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
             transition: all 0.4s ease; max-height: 95vh;
+            scrollbar-width: thin; scrollbar-color: rgba(0, 243, 255, 0.4) rgba(0, 0, 0, 0.2);
         }
         #panel-left { top: 20px; left: 20px; width: 380px; bottom: 20px; overflow-y: scroll; }
         #panel-right { top: 20px; right: 20px; width: 420px; bottom: 20px; overflow-y: scroll; transform: translateX(120%); }
         #panel-right.active { transform: translateX(0); }
         
+        /* Typography */
         h2 { margin: 0 0 15px 0; font-weight: 400; font-size: 18px; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
         h3 { font-size: 13px; color: #fff; margin-top: 15px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
@@ -49,10 +52,8 @@
         .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
 
         /* Ranking */
-        #ranking-list { margin-bottom: 20px; }
         .ranking-item { display: flex; justify-content: space-between; padding: 8px 10px; margin-bottom: 4px; border-radius: 6px; cursor: pointer; transition: background 0.2s; font-size: 14px; background: rgba(0,0,0,0.3); }
         .ranking-item:hover { background: rgba(0, 243, 255, 0.1); }
-        .rank-score { font-weight: bold; }
         .score-indicator { width: 5px; height: 100%; margin-right: 10px; border-radius: 2px; }
 
         /* Results */
@@ -72,17 +73,12 @@
         .progress-bar-fill { height: 100%; background: var(--neon-blue); width: 0%; transition: width 0.3s; }
         .spinner { width: 50px; height: 50px; border: 3px solid rgba(0,243,255,0.3); border-top-color: var(--neon-blue); border-radius: 50%; animation: spin 1s infinite linear; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(0, 243, 255, 0.4); border-radius: 3px; }
-        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
     </style>
 </head>
 <body>
     <div id="loader">
         <div class="spinner"></div>
-        <div style="margin-top:20px; font-size:14px; letter-spacing:2px; color:var(--neon-blue);" id="loader-text">Scanne 258 Paradiese...</div>
+        <div style="margin-top:20px; font-size:14px; letter-spacing:2px; color:var(--neon-blue);" id="loader-text">Scanne 258 Paradiese und kalibriere Geo-Daten...</div>
         <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
     </div>
 
@@ -113,7 +109,7 @@
             <span style="font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#aaa;">Globaler Match Score</span>
         </div>
 
-        <h3>Finanzanalyse (Basis: ${document.getElementById('income')?.value || 120000} € Brutto)</h3>
+        <h3>Finanzanalyse</h3>
         <div class="finance-grid">
             <div class="f-row"><span>Effektiver Steuersatz</span><span id="tax-rate" style="font-weight:bold;">0%</span></div>
             <div class="f-row"><span>Netto nach Steuern / Jahr</span><span id="net-income"></span></div>
@@ -146,7 +142,7 @@
         // 1. GLOBALE KONSTANTEN & DATENBANK
         // ==========================================
         const BASE_INCOME_DE = 120000;
-        const TAX_RATE_DE = 0.42; // Simulierter durchschnittlicher Steuersatz in Deutschland
+        const TAX_RATE_DE = 0.42; 
         const MONTHLY_COST_DE = 2500 * (2 + 2 * 0.6); // Basis-Lebenshaltung DE (Familie 2+2)
         
         const QUESTIONS = [
@@ -166,7 +162,6 @@
             "Exit jederzeit möglich (Kapital rausbringbar)", "Top Kinder-Infrastruktur (Spielplätze, Freizeit, Schulen)"
         ];
         
-        // Vorgegebene Top-Ziele mit realistischen Scores
         const HIGH_VALUE_DESTINATIONS = [
             {"name":"Dubai (UAE)","lat":25.2048,"lng":55.2708,"flag":"🇦🇪","tax":0,"living":78000,"residency":"Golden Visa ab 500k€","scores":[1,1,1,0.95,1,1,1,1,1,1,0.7,0.6,0.95,0.7,0.8,0.9,1,0.9,0.9,1,1,1,0.9,1,1,0.9,1,1]},
             {"name":"Madeira (Portugal)","lat":32.7607,"lng":-16.9595,"flag":"🇵🇹","tax":10,"living":42000,"residency":"NHR 2.0 bis mind. 2034","scores":[1,0.9,0.95,0.95,0.95,0.85,0.9,0.9,1,1,0.9,0.9,0.9,0.95,1,1,1,0.95,1,1,0.9,1,1,1,1,0.95,1,1]},
@@ -185,8 +180,8 @@
         ];
         
         let destinations = [];
-        const TOTAL_LOCATIONS = 258;
-        
+        const TOTAL_LOCATIONS = 258; // Wie gewünscht
+
         // --- Globale 3D/UI Variablen ---
         let pointMeshes = [];
         let raycaster = new THREE.Raycaster();
@@ -201,7 +196,7 @@
         function generateProceduralLocations() {
             // 1. Add High-Value
             destinations = HIGH_VALUE_DESTINATIONS.map(d => ({
-                ...d, calc: {}, id: 'HV_' + d.name.replace(/\W/g, '')
+                ...d, calc: {}, id: 'HV_' + d.name.replace(/\W/g, ''), real: true
             }));
 
             // 2. Add 244 additional generic countries/regions
@@ -214,17 +209,18 @@
                 destinations.push({
                     name: `Region ${destinations.length + 1} (${parent.flag})`,
                     lat: parent.lat + offsetLat, lng: parent.lng + offsetLng,
-                    flag: '🌐', tax: parent.tax + Math.round((Math.random() - 0.5) * 10),
+                    flag: '🌐', tax: Math.max(5, parent.tax + Math.round((Math.random() - 0.5) * 10)),
                     living: parent.living * (0.8 + Math.random() * 0.4),
-                    residency: 'Unbekannt/Lokales Programm',
-                    scores: Array(QUESTIONS.length).fill(0).map(() => Math.max(0.2, baseScore * (0.7 + Math.random() * 0.3))), // Cluster scores
+                    residency: 'Lokales Programm (Simuliert)',
+                    scores: Array(QUESTIONS.length).fill(0).map(() => Math.max(0.2, baseScore * (0.7 + Math.random() * 0.3))), 
                     real: false, calc: {}, id: 'PR_' + destinations.length
                 });
             }
+            document.getElementById('progress-fill').style.width = '50%';
         }
 
         // ==========================================
-        // 3. THREE.JS & RENDERING (GLSL God Rays)
+        // 3. THREE.JS & RENDERING (Realistic Shader)
         // ==========================================
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -244,10 +240,15 @@
 
         // Lights
         scene.add(new THREE.AmbientLight(0x404080, 0.6));
-        scene.add(new THREE.DirectionalLight(0xffffff, 1.5));
+        const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
+        dirLight.position.set(50, 50, 50);
+        scene.add(dirLight);
 
-        // --- GLSL GLOBE SHADER (Atmosphere & God Rays) ---
-        const earthUniforms = { time: { value: 0.0 }, viewVector: { value: new THREE.Vector3() } };
+        // --- GLSL REALISTIC GLOBE SHADER (Noise-based Landmass/Ocean) ---
+        const earthUniforms = { 
+            time: { value: 0.0 }, 
+            uLightPos: { value: dirLight.position } 
+        };
         const earthMat = new THREE.ShaderMaterial({
             uniforms: earthUniforms,
             vertexShader: `
@@ -258,72 +259,146 @@
                 }
             `,
             fragmentShader: `
-                uniform float time; varying vec3 vNormal; varying vec3 vPos; varying vec2 vUv;
-                // Constants
-                const float R = 10.0;
+                uniform float time;
+                uniform vec3 uLightPos;
+                varying vec3 vNormal;
+                varying vec3 vPos;
+                varying vec2 vUv;
                 
-                // Color functions
-                vec3 HUEtoRGB(float H){
-                    H = mod(H, 1.0);
-                    float R = abs(H * 6.0 - 3.0) - 1.0;
-                    float G = 2.0 - abs(H * 6.0 - 2.0);
-                    float B = 2.0 - abs(H * 6.0 - 4.0);
-                    return clamp(vec3(R,G,B), 0.0, 1.0);
+                // Classic Perlin Noise implementation (necessary for procedural texture)
+                vec3 mod289(vec3 x) { return x - floor(x / 289.0) * 289.0; }
+                vec4 mod289(vec4 x) { return x - floor(x / 289.0) * 289.0; }
+                vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+                vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+                
+                float snoise(vec3 v) {
+                    const vec2  C = vec2(1.0/6.0, 1.0/3.0);
+                    const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+                
+                    vec3 i  = floor(v + dot(v, C.yyy));
+                    vec3 x0 =   v - i + dot(i, C.xxx);
+                
+                    vec3 g = step(x0.yzx, x0.xyz);
+                    vec3 l = 1.0 - g;
+                    vec3 i1 = min(g.xyz, l.zxy);
+                    vec3 i2 = max(g.xyz, l.zxy);
+                
+                    vec3 x1 = x0 - i1 + C.xxx;
+                    vec3 x2 = x0 - i2 + C.yyy;
+                    vec3 x3 = x0 - D.yyy + C.zzz;
+                
+                    i = mod289(i); 
+                    vec4 p = permute(permute(permute( 
+                                i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                            + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
+                            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+                
+                    float n_ = 0.142857142857;
+                    vec3  ns = n_ * D.wyz - D.xzx;
+                
+                    vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+                
+                    vec4 x_ = floor(j * ns.z);
+                    vec4 y_ = floor(j - 7.0 * x_ );
+                
+                    vec4 x = x_ * ns.x + ns.yyyy;
+                    vec4 y = y_ * ns.x + ns.yyyy;
+                    vec4 h = 13.0 * y + x;
+                
+                    vec4 ox = mod(h, 7.0);
+                    vec4 oy = mod(floor(h / 7.0), 7.0);
+                
+                    vec4 dx = x0 + ns.xxxx;
+                    vec4 dy = x0 + ns.yyyy;
+                    vec4 dz = x0 + ns.zzzz;
+                
+                    vec4 sx = dx * dx + dy * dy + dz * dz;
+                    vec4 a  = ( 0.6 - sx ) * ( 0.6 - sx );
+                    a = max(a, 0.0);
+                
+                    vec4  w0 = taylorInvSqrt(sx);
+                    vec4  w1 = taylorInvSqrt(sx - 1.0);
+                    vec4  w2 = taylorInvSqrt(sx - 2.0);
+                    vec4  w3 = taylorInvSqrt(sx - 3.0);
+                
+                    vec4  g0 = taylorInvSqrt(mod289(vec4(13.0 * y + x + 1.0)));
+                    vec4  g1 = taylorInvSqrt(mod289(vec4(13.0 * oy + ox + 1.0)));
+                    vec4  g2 = taylorInvSqrt(mod289(vec4(13.0 * oy + ox + 2.0)));
+                    vec4  g3 = taylorInvSqrt(mod289(vec4(13.0 * y + x + 3.0)));
+                
+                    return 32.0 * dot(a * a * a, g0 + g1 + g2 + g3);
                 }
-                vec3 HSLtoRGB(vec3 HSL){
-                    vec3 RGB = HUEtoRGB(HSL.x);
-                    float C = (1.0 - abs(2.0 * HSL.z - 1.0)) * HSL.y;
-                    return (RGB - 0.5) * C + HSL.z;
-                }
-
-                void main() {
-                    // Global Grid
-                    float scale = 30.0; float line = 0.02;
-                    float gx = step(1.0-line, mod(vUv.x * scale * 2.0, 1.0));
-                    float gy = step(1.0-line, mod(vUv.y * scale * 1.5 + time*0.01, 1.0));
-                    float grid = max(gx, gy);
-                    
-                    // Atmosphere/Rim Lighting
-                    vec3 normal = normalize(vNormal);
-                    vec3 viewDir = normalize(-vPos);
-                    float rim = pow(1.0 - max(dot(viewDir, normal), 0.0), 3.0);
-                    
-                    // God Rays (simple simulation based on screen space)
-                    vec2 screenUV = gl_FragCoord.xy / vec2(1000.0, 800.0); // Simplified resolution
-                    float rayEffect = 0.0;
-                    if (length(screenUV - vec2(0.5, 0.5)) > 0.3) {
-                       rayEffect = pow(1.0 - length(screenUV - vec2(0.5, 0.5)), 10.0) * 0.5;
+                
+                // 3D Worley Noise (Cellular)
+                float worley(vec3 p) {
+                    vec3 i = floor(p);
+                    vec3 f = fract(p);
+                    float d = 1.0;
+                    for (int x = -1; x <= 1; x++) {
+                        for (int y = -1; y <= 1; y++) {
+                            for (int z = -1; z <= 1; z++) {
+                                vec3 neighbor = vec3(float(x), float(y), float(z));
+                                vec3 point = i + neighbor + mod289(sin(neighbor * 1000.0) * 10000.0);
+                                float dist = length(f - neighbor - point);
+                                d = min(d, dist);
+                            }
+                        }
                     }
+                    return d;
+                }
+                
+                void main() {
+                    // Use Spherical Coordinates from VPos for continuous sampling
+                    vec3 norm = normalize(vPos);
+                    vec3 p = norm * 15.0; // Scale up for noise sampling
                     
-                    // Final Color Composition
-                    vec3 coreColor = mix(vec3(0.02, 0.02, 0.05), vec3(0.0, 0.2, 0.5), grid * 0.6);
-                    vec3 rimColor = HSLtoRGB(vec3(0.55, 1.0, 0.7)) * rim * 1.5;
+                    // Layer 1: Base Ocean/Space Color
+                    vec3 oceanColor = vec3(0.0, 0.15, 0.4);
                     
-                    vec3 finalColor = coreColor + rimColor;
-                    finalColor += vec3(0.0, 0.1, 0.2) * rayEffect;
+                    // Layer 2: Landmass simulation using combined noise
+                    float noise1 = snoise(p * 0.8 + time * 0.05);
+                    float noise2 = worley(p * 2.0);
+                    
+                    float landThreshold = 0.55;
+                    float landMix = smoothstep(landThreshold - 0.1, landThreshold + 0.1, noise1 + noise2 * 0.1);
+                    
+                    vec3 landColor = vec3(0.05, 0.4, 0.1); // Dark Green/Brown
+                    vec3 surfaceColor = mix(oceanColor, landColor, landMix);
 
-                    gl_FragColor = vec4(finalColor, 0.95);
+                    // Lighting
+                    vec3 L = normalize(uLightPos - vPos);
+                    vec3 N = normalize(vNormal);
+                    float diff = max(dot(N, L), 0.0) * 0.7 + 0.3; // Simple diffuse lighting
+                    
+                    // Atmosphere/Rim Glow (subtle neon rim)
+                    vec3 viewDir = normalize(-vPos);
+                    float rim = pow(1.0 - max(dot(viewDir, N), 0.0), 4.0);
+                    vec3 rimColor = vec3(0.0, 0.8, 1.0) * rim * 1.5;
+
+                    vec3 finalColor = surfaceColor * diff;
+                    finalColor += rimColor; // Add rim lighting
+
+                    gl_FragColor = vec4(finalColor, 1.0);
                 }
             `,
-            transparent: true
+            transparent: false
         });
         const earth = new THREE.Mesh(new THREE.SphereGeometry(10, 64, 64), earthMat);
         scene.add(earth);
 
-        // Atmosphere Glow (Backside)
+        // Atmosphere Glow (Standard)
         const atmoMat = new THREE.ShaderMaterial({
             vertexShader: `varying vec3 vNormal; void main() { vNormal = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
-            fragmentShader: `varying vec3 vNormal; void main() { float intensity = pow(0.6 - dot(vNormal, vec3(0, 0, 1.0)), 4.0); gl_FragColor = vec4(0.0, 0.4, 1.0, 1.0) * intensity; }`,
+            fragmentShader: `varying vec3 vNormal; void main() { float intensity = pow(0.8 - dot(vNormal, vec3(0, 0, 1.0)), 4.0); gl_FragColor = vec4(0.0, 0.6, 1.0, 1.0) * intensity; }`,
             blending: THREE.AdditiveBlending, side: THREE.BackSide, transparent: true
         });
         scene.add(new THREE.Mesh(new THREE.SphereGeometry(11.5, 64, 64), atmoMat));
         
-        // Helper: Lat/Lng to Vector3 (korrigierte V3-Umwandlung)
+        // Helper: Lat/Lng to Vector3
         function getPosFromLatLng(lat, lng, radius) {
-            const phi = (90 - lat) * (Math.PI / 180); // 0 at North Pole, PI at South Pole
-            const theta = (lng + 180) * (Math.PI / 180); // 0 at -180 deg Lng, 2PI at 180 deg Lng
+            const phi = (90 - lat) * (Math.PI / 180); 
+            const theta = (lng + 180) * (Math.PI / 180); 
             
-            // Y is UP in Three.js
             const x = -(radius * Math.sin(phi) * Math.cos(theta));
             const z = (radius * Math.sin(phi) * Math.sin(theta));
             const y = (radius * Math.cos(phi));
@@ -337,23 +412,26 @@
             pointMeshes = [];
 
             destinations.forEach((loc, i) => {
-                const mat = new THREE.MeshBasicMaterial({ color: 0x555555 });
+                const mat = new THREE.MeshBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.8 });
                 const mesh = new THREE.Mesh(dotGeo, mat);
                 
                 mesh.position.copy(getPosFromLatLng(loc.lat, loc.lng, 10.1));
+                
+                // Ensure the mesh points outwards from the center for lighting/culling
+                mesh.lookAt(new THREE.Vector3(0, 0, 0));
                 
                 mesh.userData = { data: loc };
                 pointsGroup.add(mesh);
                 pointMeshes.push(mesh);
             });
             scene.add(pointsGroup);
+            document.getElementById('progress-fill').style.width = '75%';
         }
 
         // ==========================================
         // 4. CORE ENGINE (SCORING & FINANCE)
         // ==========================================
         
-        // Initialisiere Slider und Event Listener
         function setupUIAndListeners() {
             const sliderCont = document.getElementById('sliders-container');
             QUESTIONS.forEach((q, i) => {
@@ -366,6 +444,7 @@
             ['income', 'adults', 'children'].forEach(id => {
                 document.getElementById(id).addEventListener('input', calculate);
             });
+            document.getElementById('progress-fill').style.width = '85%';
         }
         
         window.updateWeight = (idx, val) => {
@@ -385,7 +464,6 @@
             const netDE = income - taxAmtDE;
             const livingDE = MONTHLY_COST_DE * 12;
             const cashflowDE = netDE - livingDE;
-            const cashflowMonthlyDE = cashflowDE / 12;
 
             destinations.forEach((d, idx) => {
                 // 1. Soft Factor Score (75%)
@@ -400,12 +478,10 @@
                 // 2. Finance Calc
                 const taxAmt = income * (d.tax / 100);
                 const net = income - taxAmt;
-                const living = (d.living / (2 + 2 * 0.6)) * familyFactor; // Skaliere die Living-Kosten auf die aktuelle Familiengröße
+                const living = (d.living / (2 + 2 * 0.6)) * familyFactor; // Skalierung
                 const cashflow = net - living;
-                const cashflowMonthly = cashflow / 12;
                 
                 // 3. Finance Bonus (25%)
-                // Voller Bonus (1.0) bei > 60.000 €/Jahr Cashflow
                 const maxBonusThreshold = 60000;
                 const financeBonus = Math.min(Math.max(cashflow, 0), maxBonusThreshold) / maxBonusThreshold;
 
@@ -417,16 +493,15 @@
                     net: net,
                     living: living,
                     cashflow: cashflow,
-                    cashflowMonthly: cashflowMonthly,
-                    wealthDelta: (cashflow - cashflowDE) * 10 // 10 Jahre Vermögens-Delta
+                    cashflowMonthly: cashflow / 12,
+                    wealthDelta: (cashflow - cashflowDE) * 10 
                 };
 
                 // Visual Update: Punkt färben und skalieren
                 const mesh = pointMeshes[idx];
                 const color = new THREE.Color();
-                // HSL Interpolation: Rot (0%) -> Gelb (50%) -> Grün (100%)
                 const h = (d.calc.score / 100) * 0.33; 
-                color.setHSL(h, 1.0, 0.6); // HSL(hue, saturation, lightness)
+                color.setHSL(h, 1.0, 0.6); 
                 mesh.material.color.lerp(color, 0.2);
                 
                 const scale = 1 + (d.calc.score / 50);
@@ -598,7 +673,7 @@
             createPoints();
             setupUIAndListeners();
             
-            calculate(); // Erstberechnung
+            calculate(); 
 
             // Ladeanimation ausblenden
             document.getElementById('loader').style.opacity = 0;
@@ -614,7 +689,6 @@
             }, 1500);
         }
 
-        // --- Window/Input Events ---
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
